@@ -1,0 +1,16 @@
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+table {
+  border-spacing: 0;
+  border: 1px solid black;
+}
+
+td {
+  padding: 0;
+  border: 1px solid black;
+  height: 1vw;
+  width: 1vw;
+}
