@@ -6,11 +6,12 @@ html, body {
 table {
   border-spacing: 0;
   border: 1px solid black;
+  margin: 0 auto;
 }
 
 td {
   padding: 0;
   border: 1px solid black;
-  height: 1vw;
-  width: 1vw;
+  height: 1vh;
+  width: 1vh;
 }
