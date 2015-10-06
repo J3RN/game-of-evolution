@@ -1,16 +1,28 @@
 var CREATURE = {};
+CREATURE.species = {};
 
-var Creature = function(dna) {
-    // this.behavior = dna.behavior;
-    // this.size = dna.size;
+var Creature = function(dna, loc) {
+    if (!dna) {
+        throw 'No DNA given!';
+    }
 
-    randomLoc = randomLocation();
+    if (!loc) {
+        throw 'No location given!';
+    }
+
+    this.dna = dna;
+    this.size = dna[0];
+    this.species = dna[1];
+    this.color = dna.slice(2, 5);
+    this.behavior = dna.slice(5, 9);
+    this.speed = dna[10];
+
     this.loc = {
-        x: randomLoc[0],
-        y: randomLoc[1]
+        x: loc[0],
+        y: loc[1]
     };
+
     this.direction = randomDirection();
-    this.color = randomColor();
     this.days_since_food = 0;
     this.dead = false;
 }
@@ -26,8 +38,8 @@ Creature.prototype = {
     entities: {
         enemy: 0,
         friend: 1,
-        wall: 2,
-        empty: 3
+        empty: 2,
+        wall: 3
     },
 
     getBefore: function() {
@@ -37,14 +49,14 @@ Creature.prototype = {
 
         if ((dir === this.directions.up && y === 0) ||
                 (dir === this.directions.left && x === 0) ||
-                (dir === this.directions.down && y === 100) ||
+                (dir === this.directions.down && y === 99) ||
                 (dir === this.directions.right && x === 99)) {
             return this.entities.wall;
         } else {
             target = this.getCreatureBefore();
 
             if (target) {
-                if (target.dna === this.dna) {
+                if (target.species === this.species) {
                     return this.entities.friend;
                 } else {
                     return this.entities.enemy;
@@ -58,16 +70,16 @@ Creature.prototype = {
     getCreatureBefore: function() {
         switch(this.direction) {
             case this.directions.up:
-                getCreature(this.loc.x, this.loc.y - 1);
+                return getCreature(this.loc.x, this.loc.y - 1);
                 break;
             case this.directions.right:
-                getCreature(this.loc.x + 1, this.loc.y);
+                return getCreature(this.loc.x + 1, this.loc.y);
                 break;
             case this.directions.down:
-                getCreature(this.loc.x, this.loc.y + 1);
+                return getCreature(this.loc.x, this.loc.y + 1);
                 break;
             case this.directions.left:
-                getCreature(this.loc.x - 1, this.loc.y);
+                return getCreature(this.loc.x - 1, this.loc.y);
                 break;
         }
     },
@@ -78,17 +90,81 @@ Creature.prototype = {
 
             switch(this.getBefore()) {
                 case this.entities.friend:
+                    this.friend_action();
                     break;
                 case this.entities.enemy:
-                    this.eat(this.getCreatureBefore());
+                    this.enemy_action();
                     break;
                 case this.entities.empty:
-                    this.move();
+                    this.empty_action();
                     break;
                 case this.entities.wall:
-                    this.turn_left();
+                    this.wall_action();
                     break;
             }
+
+            // if (this.days_since_food > 14) {
+            //     this.die();
+            // }
+        }
+    },
+
+    friend_action: function() {
+        switch(this.behavior[this.entities.friend]) {
+            case 0:
+                this.eat(this.getCreatureBefore());
+                break;
+            case 1:
+                this.mate(this.getCreatureBefore());
+                break;
+            case 2:
+                this.turn_left();
+                break;
+            case 3:
+                this.turn_right();
+                break;
+        }
+    },
+
+    enemy_action: function() {
+        switch(this.behavior[this.entities.enemy]) {
+            case 0:
+                this.eat(this.getCreatureBefore());
+                break;
+            case 1:
+                this.mate(this.getCreatureBefore());
+                break;
+            case 2:
+                this.turn_left();
+                break;
+            case 3:
+                this.turn_right();
+                break;
+        }
+    },
+
+    empty_action: function() {
+        switch(this.behavior[this.entities.empty]) {
+            case 0:
+                this.move();
+                break;
+            case 1:
+                this.turn_left();
+                break;
+            case 2:
+                this.turn_right();
+                break;
+        }
+    },
+
+    wall_action: function() {
+        switch(this.behavior[this.entities.wall]) {
+            case 0:
+                this.turn_left();
+                break;
+            case 1:
+                this.turn_right();
+                break;
         }
     },
 
@@ -102,7 +178,11 @@ Creature.prototype = {
     },
 
     mate: function(creature) {
-        // TODO
+        if (this.species === creature.species) {
+            new_dna = mergeDNA(this, creature);
+
+            CREATURE.creatures.push(new Creature(new_dna, this.loc));
+        }
     },
 
     turn_right: function() {
@@ -139,6 +219,7 @@ Creature.prototype = {
     },
 
     die: function() {
+        console.log(this.dna);
         this.dead = true;
     }
 }
@@ -152,9 +233,11 @@ function randomDirection() {
 }
 
 function randomColor() {
-    return [ Math.floor(Math.random() * 256),
-             Math.floor(Math.random() * 256),
-             Math.floor(Math.random() * 256) ]
+    return [
+        Math.floor(Math.random() * 256),
+        Math.floor(Math.random() * 256),
+        Math.floor(Math.random() * 256)
+    ]
 }
 
 function getCreature(x, y) {
@@ -165,4 +248,39 @@ function getCreature(x, y) {
             return prev;
         }
     }, undefined);
+}
+
+function createSpecies(species) {
+    CREATURE.species[species] = randomColor();
+}
+
+function mergeDNA(species1, species2) {
+    dna_length = species1.dna.length;
+    new_dna = [];
+
+    for (var i = 0; i < dna_length; i++) {
+        if (Math.random() > 0.5) {
+            new_dna.push(species1.dna[i]);
+        } else {
+            new_dna.push(species2.dna[i]);
+        }
+    }
+
+    return new_dna;
+}
+
+function generateDNA(species) {
+    color = CREATURE.species[species];
+
+    return [
+        Math.ceil(Math.random() * 100),
+        species,
+        color[0],
+        color[1],
+        color[2],
+        Math.floor(Math.random() * 4),
+        Math.floor(Math.random() * 4),
+        Math.floor(Math.random() * 3),
+        Math.floor(Math.random() * 2)
+    ];
 }

@@ -1,13 +1,24 @@
+var GAME = {};
+
 function setup() {
     // Setup items here
+    GAME.num_species = 4;
     createInitial();
 }
 
 function createInitial() {
     CREATURE.creatures = [];
 
-    for (var i = 0; i < 200; i++) {
-        CREATURE.creatures.push(new Creature(1));
+    num_species = GAME.num_species;
+    for (var i = 0; i < num_species; i++) {
+        createSpecies(i);
+
+        for (var j = 0; j < (200 / num_species); j++) {
+            dna = generateDNA(i);
+            randomLoc = randomLocation();
+
+            CREATURE.creatures.push(new Creature(dna, randomLoc));
+        }
     }
 
     redraw();
