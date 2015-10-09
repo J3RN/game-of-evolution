@@ -1,23 +1,38 @@
-var GAME = {};
+GAME.num_species = 4;
 
 function setup() {
-    // Setup items here
-    GAME.num_species = 4;
-    createInitial();
+    createBoard();
+    createInitialCreatures();
 }
 
-function createInitial() {
-    CREATURE.creatures = [];
+function createBoard() {
+    GAME.board = [];
 
-    num_species = GAME.num_species;
+    for (var i = 0; i < 100; i++) {
+        GAME.board[i] = [];
+
+        for (var j = 0; j < 100; j++) {
+            GAME.board[i][j] = undefined;
+        }
+    }
+}
+
+function createInitialCreatures() {
+    var num_species = GAME.num_species;
+
     for (var i = 0; i < num_species; i++) {
         createSpecies(i);
 
         for (var j = 0; j < (200 / num_species); j++) {
-            dna = generateDNA(i);
-            randomLoc = randomLocation();
+            var dna = generateDNA(i);
 
-            CREATURE.creatures.push(new Creature(dna, randomLoc));
+            do {
+                var randomLoc = randomLocation();
+            } while (getCreature(randomLoc.x, randomLoc.y));
+
+            var newCreature = new Creature(dna, randomLoc);
+
+            GAME.board[randomLoc.x][randomLoc.y] = newCreature;
         }
     }
 
@@ -25,17 +40,15 @@ function createInitial() {
 }
 
 function gameLoop() {
-    // Prune off the dead
-    CREATURE.creatures.forEach(function(creature, index) {
-        if (creature.dead) {
-            delete CREATURE.creatures[index];
-        }
-    });
+    for (var x = 0; x < 100; x++) {
+        for (var y = 0; y < 100; y++) {
+            var creature = getCreature(x, y);
 
-    // Remaining creatures act
-    CREATURE.creatures.forEach(function(creature, index) {
-        creature.act();
-    });
+            if (creature) {
+                creature.act();
+            }
+        }
+    }
 
     redraw();
 }
@@ -43,7 +56,7 @@ function gameLoop() {
 function redraw() {
     for (var x = 0; x < 100; x++) {
         for (var y = 0; y < 100; y++) {
-            creature = getCreature(x, y);
+            var creature = getCreature(x, y);
 
             if (creature) {
                 setCell(x, y, creature.color);

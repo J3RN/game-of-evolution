@@ -1,27 +1,29 @@
-var CREATURE = {};
-CREATURE.species = {};
+'use strict';
+
+var GAME = {};
+GAME.species = {};
 
 var Creature = function(dna, loc) {
-    if (!dna) {
+    if (dna === undefined) {
         throw 'No DNA given!';
     }
 
-    if (!loc) {
+    if (loc === undefined) {
         throw 'No location given!';
+    } else if (loc.x === undefined) {
+        throw 'No x coordinate!'
+    } else if (loc.y === undefined) {
+        throw 'No y coordinate!';
     }
 
     this.dna = dna;
-    this.size = dna[0];
-    this.species = dna[1];
-    this.color = dna.slice(2, 5);
-    this.behavior = dna.slice(5, 9);
-    this.speed = dna[10];
+    this.species = dna[0];
+    this.color = GAME.species[this.species];
+    this.size = dna[1];
+    this.behavior = dna.slice(2, 6);
+    this.speed = dna[6];
 
-    this.loc = {
-        x: loc[0],
-        y: loc[1]
-    };
-
+    this.loc = loc;
     this.direction = randomDirection();
     this.days_since_food = 0;
     this.dead = false;
@@ -42,10 +44,19 @@ Creature.prototype = {
         wall: 3
     },
 
+    actions: {
+        eat: 0,
+        mate: 1,
+        turn_left: 2,
+            turn_right: 3,
+            move: 4
+    },
+
     getBefore: function() {
-        x = this.loc.x;
-        y = this.loc.y;
-        dir = this.direction;
+        var x = this.loc.x;
+        var y = this.loc.y;
+
+        var dir = this.direction;
 
         if ((dir === this.directions.up && y === 0) ||
                 (dir === this.directions.left && x === 0) ||
@@ -53,7 +64,7 @@ Creature.prototype = {
                 (dir === this.directions.right && x === 99)) {
             return this.entities.wall;
         } else {
-            target = this.getCreatureBefore();
+            var target = this.getCreatureBefore();
 
             if (target) {
                 if (target.species === this.species) {
@@ -88,105 +99,57 @@ Creature.prototype = {
         if (!this.dead) {
             this.days_since_food += 1;
 
-            switch(this.getBefore()) {
-                case this.entities.friend:
-                    this.friend_action();
+            var behavior = this.behavior[this.getBefore()];
+            switch(behavior) {
+                case this.actions.eat:
+                    this.eat();
                     break;
-                case this.entities.enemy:
-                    this.enemy_action();
+                case this.actions.mate:
+                    this.mate();
                     break;
-                case this.entities.empty:
-                    this.empty_action();
+                case this.actions.turn_left:
+                    this.turn_left();
                     break;
-                case this.entities.wall:
-                    this.wall_action();
+                case this.actions.turn_right:
+                    this.turn_right();
+                    break;
+                case this.actions.move:
+                    this.move();
                     break;
             }
 
-            // if (this.days_since_food > 14) {
-            //     this.die();
-            // }
+            // Starvation
+            if (this.days_since_food > 14) {
+                this.die();
+            }
         }
     },
 
-    friend_action: function() {
-        switch(this.behavior[this.entities.friend]) {
-            case 0:
-                this.eat(this.getCreatureBefore());
-                break;
-            case 1:
-                this.mate(this.getCreatureBefore());
-                break;
-            case 2:
-                this.turn_left();
-                break;
-            case 3:
-                this.turn_right();
-                break;
-        }
-    },
+    eat: function() {
+        var creature = this.getCreatureBefore();
 
-    enemy_action: function() {
-        switch(this.behavior[this.entities.enemy]) {
-            case 0:
-                this.eat(this.getCreatureBefore());
-                break;
-            case 1:
-                this.mate(this.getCreatureBefore());
-                break;
-            case 2:
-                this.turn_left();
-                break;
-            case 3:
-                this.turn_right();
-                break;
-        }
-    },
-
-    empty_action: function() {
-        switch(this.behavior[this.entities.empty]) {
-            case 0:
-                this.move();
-                break;
-            case 1:
-                this.turn_left();
-                break;
-            case 2:
-                this.turn_right();
-                break;
-        }
-    },
-
-    wall_action: function() {
-        switch(this.behavior[this.entities.wall]) {
-            case 0:
-                this.turn_left();
-                break;
-            case 1:
-                this.turn_right();
-                break;
-        }
-    },
-
-    eat: function(creature) {
-        if (this.size < creature.size) {
-            this.die();
-        } else {
+        if (creature && this.size > creature.size) {
             creature.die();
             this.days_since_food = 0;
         }
     },
 
-    mate: function(creature) {
-        if (this.species === creature.species) {
-            new_dna = mergeDNA(this, creature);
+    mate: function() {
+        var creature = this.getCreatureBefore();
 
-            CREATURE.creatures.push(new Creature(new_dna, this.loc));
+        if (creature && this.species === creature.species) {
+            var childLocation = newLocation(this) || newLocation(creature);
+            var new_dna = mergeDNA(this, creature);
+
+            if (childLocation) {
+                GAME.board[childLocation.x][childLocation.y] = new Creature(new_dna, childLocation);
+                console.log("Successful mate");
+            }
         }
     },
 
     turn_right: function() {
-        direction = this.direction + 1;
+        var direction = this.direction + 1;
         if (direction === 4) {
             direction = 0;
         }
@@ -194,7 +157,7 @@ Creature.prototype = {
     },
 
     turn_left: function() {
-        direction = this.direction - 1;
+        var direction = this.direction - 1;
         if (direction === -1) {
             direction = 3;
         }
@@ -202,61 +165,79 @@ Creature.prototype = {
     },
 
     move: function() {
-        switch(this.direction) {
-            case this.directions.up:
-                this.loc.y -= 1;
-                break;
-            case this.directions.right:
-                this.loc.x += 1;
-                break;
-            case this.directions.down:
-                this.loc.y += 1;
-                break;
-            case this.directions.left:
-                this.loc.x -= 1;
-                break;
+        var before = this.getBefore();
+
+        if (before === this.entities.empty) {
+            var oldLoc = { x: this.loc.x, y: this.loc.y };
+
+            switch(this.direction) {
+                case this.directions.up:
+                    this.loc.y -= 1;
+                    break;
+                case this.directions.right:
+                    this.loc.x += 1;
+                    break;
+                case this.directions.down:
+                    this.loc.y += 1;
+                    break;
+                case this.directions.left:
+                    this.loc.x -= 1;
+                    break;
+            }
+
+            var newLoc = { x: this.loc.x, y: this.loc.y };
+            moveCreature(oldLoc, newLoc);
         }
     },
 
     die: function() {
-        console.log(this.dna);
-        this.dead = true;
+        GAME.board[this.loc.x][this.loc.y] = undefined;
+        delete this;
     }
 }
 
 function randomLocation() {
-    return [Math.floor(Math.random() * 100), Math.floor(Math.random() * 100)];
+    return {
+        x: Math.floor(Math.random() * 100),
+        y: Math.floor(Math.random() * 100)
+    };
 }
 
 function randomDirection() {
     return Math.floor(Math.random() * 4);
 }
 
+function randomBehavior() {
+    return Math.floor(Math.random() * 5);
+}
+
+function randomUint8() {
+    return Math.floor(Math.random() * 256);
+}
+
 function randomColor() {
     return [
-        Math.floor(Math.random() * 256),
-        Math.floor(Math.random() * 256),
-        Math.floor(Math.random() * 256)
+        randomUint8(),
+        randomUint8(),
+        randomUint8()
     ]
 }
 
 function getCreature(x, y) {
-    return CREATURE.creatures.reduce(function(prev, creature) {
-        if (creature.loc.x === x && creature.loc.y === y) {
-            return creature;
-        } else {
-            return prev;
-        }
-    }, undefined);
+    if (x > 99 || x < 0 || y > 99 || y < 0) {
+        return undefined;
+    } else {
+        return GAME.board[x][y];
+    }
 }
 
 function createSpecies(species) {
-    CREATURE.species[species] = randomColor();
+    GAME.species[species] = randomColor();
 }
 
 function mergeDNA(species1, species2) {
-    dna_length = species1.dna.length;
-    new_dna = [];
+    var dna_length = species1.dna.length;
+    var new_dna = [];
 
     for (var i = 0; i < dna_length; i++) {
         if (Math.random() > 0.5) {
@@ -269,18 +250,66 @@ function mergeDNA(species1, species2) {
     return new_dna;
 }
 
-function generateDNA(species) {
-    color = CREATURE.species[species];
 
+function generateDNA(species) {
     return [
-        Math.ceil(Math.random() * 100),
         species,
-        color[0],
-        color[1],
-        color[2],
-        Math.floor(Math.random() * 4),
-        Math.floor(Math.random() * 4),
-        Math.floor(Math.random() * 3),
-        Math.floor(Math.random() * 2)
+        Math.ceil(Math.random() * 10),
+        randomBehavior(),
+        randomBehavior(),
+        randomBehavior(),
+        randomBehavior(),
+        0,
     ];
+}
+
+function moveCreature(oldLoc, newLoc) {
+    GAME.board[newLoc.x][newLoc.y] = getCreature(oldLoc.x, oldLoc.y);
+    GAME.board[oldLoc.x][oldLoc.y] = undefined;
+}
+
+function newLocation(creature) {
+    // Only spawn left an right
+    var dir = creature.direction;
+
+    var possibleLocs = [];
+
+    if (dir === creature.directions.up || dir === creature.directions.down) {
+        var xs = [creature.loc.x - 1, creature.loc.x + 1];
+        var y = creature.loc.y;
+
+        xs.forEach(function(x) {
+            possibleLocs.push({ x: x, y: y });
+        });
+    } else {
+        var ys = [creature.loc.y - 1, creature.loc.y + 1];
+        var x = creature.loc.x;
+
+        ys.forEach(function(y) {
+            possibleLocs.push({ x: x, y: y });
+        });
+    }
+
+    var locs = possibleLocs.filter(function(loc) {
+        if (getCreature(loc.x, loc.y) || isOutOfBounds(loc)) {
+            return false;
+        } else {
+            return true;
+        }
+    });
+
+    if (locs.length === 0) {
+        return undefined;
+    }
+
+    var randIndex = Math.floor(Math.random() * locs.length);
+    return locs[randIndex];
+}
+
+function isOutOfBounds(loc) {
+    if (loc.x < 0 || loc.x > 99 || loc.y < 0 || loc.y > 99) {
+        return true;
+    } else {
+        return false;
+    }
 }
