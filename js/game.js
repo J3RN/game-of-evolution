@@ -1,4 +1,5 @@
 GAME.num_species = 4;
+GAME.max_time = 20000;
 
 function setup() {
     createBoard();
@@ -19,6 +20,8 @@ function createBoard() {
 
 function createInitialCreatures() {
     var num_species = GAME.num_species;
+    GAME.species = {};
+    GAME.start_time = Date.now();
 
     for (var i = 0; i < num_species; i++) {
         createSpecies(i);
@@ -50,6 +53,21 @@ function gameLoop() {
         }
     }
 
+    if (gameIsOver()) {
+        delete GAME.species;
+
+        // Delete all remaining creatures
+        for (var x = 0; x < 100; x++) {
+            for (var y = 0; y < 100; y++) {
+                if (GAME.board[x][y]) {
+                    delete GAME.board[x][y];
+                }
+            }
+        }
+
+        createInitialCreatures();
+    }
+
     redraw();
 }
 
@@ -65,6 +83,20 @@ function redraw() {
             }
         }
     }
+}
+
+function gameIsOver() {
+    if ((Date.now() - GAME.start_time) > GAME.max_time) {
+        return true;
+    }
+
+    for (var x = 0; x < 100; x++) {
+        for (var y = 0; y < 100; y++) {
+            if (getCreature(x, y)) return false;
+        }
+    }
+
+    return true;
 }
 
 (function() {

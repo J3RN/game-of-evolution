@@ -1,7 +1,6 @@
 'use strict';
 
 var GAME = {};
-GAME.species = {};
 
 var Creature = function(dna, loc) {
     if (dna === undefined) {
@@ -143,7 +142,6 @@ Creature.prototype = {
 
             if (childLocation) {
                 GAME.board[childLocation.x][childLocation.y] = new Creature(new_dna, childLocation);
-                console.log("Successful mate");
             }
         }
     },
