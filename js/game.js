@@ -1,5 +1,4 @@
-GAME.num_species = 4;
-GAME.max_time = 20000;
+'use strict';
 
 function setup() {
     createBoard();
