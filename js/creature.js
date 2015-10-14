@@ -2,6 +2,9 @@
 
 var GAME = {};
 
+GAME.max_lifespan = 100;
+GAME.max_time_without_food = 25;
+
 var Creature = function(dna, loc) {
     if (dna === undefined) {
         throw 'No DNA given!';
@@ -23,6 +26,7 @@ var Creature = function(dna, loc) {
     this.speed = dna[6];
 
     this.loc = loc;
+    this.age = 0;
     this.direction = randomDirection();
     this.days_since_food = 0;
     this.dead = false;
@@ -97,6 +101,7 @@ Creature.prototype = {
     act: function() {
         if (!this.dead) {
             this.days_since_food += 1;
+            this.age += 1;
 
             var behavior = this.behavior[this.getBefore()];
             switch(behavior) {
@@ -117,8 +122,8 @@ Creature.prototype = {
                     break;
             }
 
-            // Starvation
-            if (this.days_since_food > 14) {
+            if (this.age > GAME.max_lifespan ||
+                    this.days_since_food > GAME.max_time_without_food) {
                 this.die();
             }
         }
