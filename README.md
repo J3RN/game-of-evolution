@@ -12,12 +12,12 @@ Check out a live running version [on my website](http:/j3rn.com/goe).
 - Each color represents a species. Individuals can only mate with other individuals in their species.
 - When mating, the offspring can appear on the left or right of a mating pair (their left and right).
 - Offspring have a set of DNA that is a arbitrary subset of constant size of the union of it's parents DNA strands.
-- Individuals who do not eat after 14 turns (~ 1.4 seconds) die of starvation.
+- Individuals who do not eat after 25 turns (2.5 seconds) die of starvation.
+- Individuals have a maximum lifespan (10 seconds).
 - Individuals can eat any other individuals, in accordance with their DNA.
 - Individuals have a size (1 - 10, inclusive). Individuals can only eat other individuals that are smaller than them.
     - TODO: Hitpoints?
-- Individuals have a maximum lifespan (10 seconds)
-- Individuals have a speed, but it is not currently used
+- Individuals have a speed, but it is not currently used.
     - TODO: Make it do something
 - TODO: Memory system?
 
@@ -38,7 +38,7 @@ The game code is in four files:
 - `js/dna.js`
 - `js/species.js`
 
-It used to rely on jQuery, but jQuery was far too slow. There is also `js/canvas_adapter.js`, but it should not need to be modified other than for performance reasons.
+There is also `js/canvas_adapter.js`, but it should not need to be modified other than for performance reasons.
 
 ### `game.js`
 
