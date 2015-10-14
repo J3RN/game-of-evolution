@@ -1,5 +1,9 @@
 'use strict';
 
+GAME.num_species = 20;
+GAME.num_indiv = 600;
+GAME.max_time = 30000;
+
 function setup() {
     createBoard();
     createInitialCreatures();
@@ -19,18 +23,20 @@ function createBoard() {
 
 function createInitialCreatures() {
     var num_species = GAME.num_species;
+    var num_indiv = GAME.num_indiv;
     GAME.species = {};
     GAME.start_time = Date.now();
 
     for (var i = 0; i < num_species; i++) {
         createSpecies(i);
 
-        for (var j = 0; j < (200 / num_species); j++) {
+        for (var j = 0; j < (num_indiv / num_species); j++) {
             var dna = generateDNA(i);
+            var randomLoc = randomLocation();
 
-            do {
-                var randomLoc = randomLocation();
-            } while (getCreature(randomLoc.x, randomLoc.y));
+            while (getCreature(randomLoc.x, randomLoc.y)) {
+                randomLoc = randomLocation();
+            }
 
             var newCreature = new Creature(dna, randomLoc);
 
