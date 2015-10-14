@@ -1,116 +1,149 @@
 'use strict';
 
-GAME.num_species = 20;
-GAME.num_indiv = 600;
-GAME.max_time = 30000;
+var GAME = {
+    num_species: 5,
+    num_indiv: 100,
+    max_time: 30000,
 
-function setup() {
-    createBoard();
-    createInitialCreatures();
-}
+    setup: function() {
+        GAME.createBoard();
+        GAME.createInitialCreatures();
+    },
 
-function createBoard() {
-    GAME.board = [];
+    createBoard: function() {
+        GAME.board = [];
 
-    for (var i = 0; i < 100; i++) {
-        GAME.board[i] = [];
+        for (var i = 0; i < 100; i++) {
+            GAME.board[i] = [];
 
-        for (var j = 0; j < 100; j++) {
-            GAME.board[i][j] = undefined;
-        }
-    }
-}
-
-function createInitialCreatures() {
-    var num_species = GAME.num_species;
-    var num_indiv = GAME.num_indiv;
-    GAME.species = {};
-    GAME.start_time = Date.now();
-
-    for (var i = 0; i < num_species; i++) {
-        createSpecies(i);
-
-        for (var j = 0; j < (num_indiv / num_species); j++) {
-            var dna = generateDNA(i);
-            var randomLoc = randomLocation();
-
-            while (getCreature(randomLoc.x, randomLoc.y)) {
-                randomLoc = randomLocation();
-            }
-
-            var newCreature = new Creature(dna, randomLoc);
-
-            GAME.board[randomLoc.x][randomLoc.y] = newCreature;
-        }
-    }
-
-    redraw();
-}
-
-function gameLoop() {
-    for (var x = 0; x < 100; x++) {
-        for (var y = 0; y < 100; y++) {
-            var creature = getCreature(x, y);
-
-            if (creature) {
-                creature.act();
+            for (var j = 0; j < 100; j++) {
+                GAME.board[i][j] = undefined;
             }
         }
-    }
+    },
 
-    if (gameIsOver()) {
-        delete GAME.species;
+    createInitialCreatures: function() {
+        var num_species = GAME.num_species;
+        var num_indiv = GAME.num_indiv;
 
-        // Delete all remaining creatures
+        GAME.start_time = Date.now();
+
+        for (var i = 0; i < num_species; i++) {
+            SPECIES.species[i] = SPECIES.createSpecies(i);
+
+            for (var j = 0; j < (num_indiv / num_species); j++) {
+                var dna = DNA.generateDNA(i);
+                var randomLoc = GAME.randomLocation();
+
+                while (GAME.getItem(randomLoc.x, randomLoc.y)) {
+                    randomLoc = GAME.randomLocation();
+                }
+
+                var newCreature = new Creature(dna, randomLoc);
+
+                GAME.board[randomLoc.x][randomLoc.y] = newCreature;
+            }
+        }
+
+        GAME.redraw();
+    },
+
+    gameLoop: function() {
         for (var x = 0; x < 100; x++) {
             for (var y = 0; y < 100; y++) {
-                if (GAME.board[x][y]) {
-                    delete GAME.board[x][y];
+                var creature = GAME.getItem(x, y);
+
+                if (creature) {
+                    creature.act();
                 }
             }
         }
 
-        createInitialCreatures();
-    }
+        if (GAME.gameIsOver()) {
+            delete GAME.species;
 
-    redraw();
-}
+            // Delete all remaining creatures
+            for (var x = 0; x < 100; x++) {
+                for (var y = 0; y < 100; y++) {
+                    if (GAME.board[x][y]) {
+                        delete GAME.board[x][y];
+                    }
+                }
+            }
 
-function redraw() {
-    for (var x = 0; x < 100; x++) {
-        for (var y = 0; y < 100; y++) {
-            var creature = getCreature(x, y);
+            GAME.createInitialCreatures();
+        }
 
-            if (creature) {
-                setCell(x, y, creature.color);
-            } else {
-                setCell(x, y, [255, 255, 255]);
+        GAME.redraw();
+    },
+
+    redraw: function() {
+        for (var x = 0; x < 100; x++) {
+            for (var y = 0; y < 100; y++) {
+                var creature = GAME.getItem(x, y);
+
+                if (creature) {
+                    ADAPTER.setCell(x, y, creature.color);
+                } else {
+                    ADAPTER.setCell(x, y, [255, 255, 255]);
+                }
             }
         }
-    }
-}
+    },
 
-function gameIsOver() {
-    if ((Date.now() - GAME.start_time) > GAME.max_time) {
-        return true;
-    }
-
-    for (var x = 0; x < 100; x++) {
-        for (var y = 0; y < 100; y++) {
-            if (getCreature(x, y)) return false;
+    gameIsOver: function() {
+        if ((Date.now() - GAME.start_time) > GAME.max_time) {
+            return true;
         }
-    }
 
-    return true;
-}
+        for (var x = 0; x < 100; x++) {
+            for (var y = 0; y < 100; y++) {
+                if (GAME.getItem(x, y)) return false;
+            }
+        }
+
+        return true;
+    },
+
+    randomLocation: function() {
+        return {
+            x: Math.floor(Math.random() * 100),
+            y: Math.floor(Math.random() * 100)
+        };
+    },
+
+    isOutOfBounds: function(loc) {
+        if (loc.x < 0 || loc.x > 99 || loc.y < 0 || loc.y > 99) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    getItem: function(x, y) {
+        if (GAME.isOutOfBounds({ x: x, y: y })) {
+            return undefined;
+        } else {
+            return GAME.board[x][y];
+        }
+    },
+
+    moveItem: function(oldLoc, newLoc) {
+        GAME.board[newLoc.x][newLoc.y] = GAME.getItem(oldLoc.x, oldLoc.y);
+        GAME.board[oldLoc.x][oldLoc.y] = undefined;
+    },
+
+};
+
 
 (function() {
     function load() {
         if (document.readyState === 'loading') {
             setTimeout(load, 100);
         } else {
-            setup();
-            setInterval(gameLoop, 100);
+            ADAPTER.load();
+            GAME.setup();
+            setInterval(GAME.gameLoop, 100);
         }
     }
 
