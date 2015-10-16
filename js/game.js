@@ -3,13 +3,13 @@
 var GAME = {
     num_species: 5,
     num_indiv: 100,
-    max_time: 0,
+    max_turns: 0,
+    turns: 0,
     creatures: [],
 
     setup: function() {
         GAME.createBoard();
         GAME.createInitialCreatures();
-        GAME.startTime = Date.now();
     },
 
     createBoard: function() {
@@ -58,6 +58,7 @@ var GAME = {
             }
         }
 
+        GAME.turns++;
         GAME.redraw();
 
         if (GAME.gameIsOver()) {
@@ -91,16 +92,15 @@ var GAME = {
 
         SPECIES.species = [];
 
-        // Get gametime. Update page if necessary
-        var gameTime = Date.now() - GAME.startTime;
-        if (gameTime > GAME.max_time) {
-            GAME.max_time = gameTime;
-            document.getElementById("max-time").textContent = "Max time: " + (GAME.max_time / 1000);
+        // Update max turns if necessary
+        if (GAME.turns > GAME.max_turns) {
+            GAME.max_turns = GAME.turns;
+            document.getElementById("max-time").textContent = "Max turns: " + GAME.max_turns;
         }
 
         // Create new creatures, restart game timer
         GAME.createInitialCreatures();
-        GAME.startTime = Date.now();
+        GAME.turns = 0;
     },
 
     redraw: function() {
