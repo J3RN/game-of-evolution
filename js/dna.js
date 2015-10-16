@@ -29,5 +29,20 @@ var DNA = {
     randomBehavior: function() {
         return Math.floor(Math.random() * 5);
     },
+
+    decodeDNA: function(dna) {
+        var actions = [ "eat", "mate", "turn left", "turn right", "move" ];
+        var names = [ "Enemy", "Friend", "Empty", "Wall" ];
+
+        console.log("Species: " + dna[0]);
+        console.log("Size: " + dna[1]);
+        console.log("Speed: " + dna[6]);
+
+        // Behavior
+        var i;
+        for (i = 2; i < 6; i++) {
+            console.log(names[i - 2] + ": " + actions[dna[i]]);
+        }
+    },
 }
 
