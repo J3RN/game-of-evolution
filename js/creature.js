@@ -71,7 +71,7 @@ var Creature = function(dna, loc) {
     this.loc = loc;
     this.age = 0;
     this.direction = CREATURE.randomDirection();
-    this.days_since_food = 0;
+    this.food = 0;
     this.dead = false;
 }
 
@@ -143,8 +143,12 @@ Creature.prototype = {
 
     act: function() {
         if (!this.dead) {
-            this.days_since_food += 1;
             this.age += 1;
+
+            // Decrease food every 10 turns
+            if (this.age % 10 === 0) {
+                this.food--;
+            }
 
             var behavior = this.behavior[this.getBefore()];
             switch(behavior) {
@@ -165,7 +169,7 @@ Creature.prototype = {
                     break;
             }
 
-            if (this.age > CREATURE.max_lifespan || this.days_since_food > CREATURE.max_time_without_food) {
+            if (this.age > CREATURE.max_lifespan || this.food < 0) {
                 this.die();
             }
         }
@@ -174,9 +178,11 @@ Creature.prototype = {
     eat: function() {
         var creature = this.getCreatureBefore();
 
-        if (creature && this.size > creature.size) {
-            creature.die();
-            this.days_since_food = 0;
+        if (creature && (creature.dead || this.size > creature.size)) {
+            // Remove creature
+            delete GAME.board[creature.loc.x][creature.loc.y];
+
+            this.food++;
         }
     },
 
@@ -236,7 +242,6 @@ Creature.prototype = {
     },
 
     die: function() {
-        GAME.board[this.loc.x][this.loc.y] = undefined;
-        delete this;
+        this.dead = true;
     },
 }

@@ -83,7 +83,11 @@ var GAME = {
                 var creature = GAME.getItem(x, y);
 
                 if (creature) {
-                    ADAPTER.setCell(x, y, creature.color);
+                    if (creature.dead) {
+                        ADAPTER.setCell(x, y, [100, 100, 100]);
+                    } else {
+                        ADAPTER.setCell(x, y, creature.color);
+                    }
                 } else {
                     ADAPTER.setCell(x, y, [255, 255, 255]);
                 }
@@ -92,17 +96,28 @@ var GAME = {
     },
 
     gameIsOver: function() {
+        var allDead = true;
+        var allEmpty = true;
+
         if ((Date.now() - GAME.start_time) > GAME.max_time) {
             return true;
         }
 
         for (var x = 0; x < 100; x++) {
             for (var y = 0; y < 100; y++) {
-                if (GAME.getItem(x, y)) return false;
+                var item = GAME.getItem(x, y)
+
+                if (item) {
+                    allEmpty = false;
+
+                    if (!item.dead) {
+                        allDead = false;
+                    }
+                }
             }
         }
 
-        return true;
+        return allDead || allEmpty;
     },
 
     randomLocation: function() {
