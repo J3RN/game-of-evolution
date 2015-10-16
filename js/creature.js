@@ -146,7 +146,7 @@ Creature.prototype = {
             this.age += 1;
 
             // Decrease food every 10 turns
-            if (this.age % 10 === 0) {
+            if (this.age % 20 === 0) {
                 this.food--;
             }
 
