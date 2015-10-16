@@ -84,7 +84,7 @@ var GAME = {
 
                 if (creature) {
                     if (creature.dead) {
-                        ADAPTER.setCell(x, y, [100, 100, 100]);
+                        ADAPTER.setCell(x, y, [0, 0, 0]);
                     } else {
                         ADAPTER.setCell(x, y, creature.color);
                     }

@@ -7,13 +7,13 @@ var SPECIES = {
 
     randomColor: function() {
         return [
-            SPECIES.randomUint8(),
-            SPECIES.randomUint8(),
-            SPECIES.randomUint8()
+            SPECIES.randomRGB(),
+            SPECIES.randomRGB(),
+            SPECIES.randomRGB()
         ]
     },
 
-    randomUint8: function() {
-        return Math.floor(Math.random() * 256);
+    randomRGB: function() {
+        return Math.floor(Math.random() * 254) + 1;
     },
 }
