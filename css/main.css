@@ -9,3 +9,11 @@ canvas {
   height: 98vmin;
   width: 98vmin;
 }
+
+#control {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 5px;
+  border: 1px solid black;
+}

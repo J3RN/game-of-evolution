@@ -3,11 +3,12 @@
 var GAME = {
     num_species: 5,
     num_indiv: 100,
-    max_time: 30000,
+    max_time: 0,
 
     setup: function() {
         GAME.createBoard();
         GAME.createInitialCreatures();
+        GAME.startTime = Date.now();
     },
 
     createBoard: function() {
@@ -25,8 +26,6 @@ var GAME = {
     createInitialCreatures: function() {
         var num_species = GAME.num_species;
         var num_indiv = GAME.num_indiv;
-
-        GAME.start_time = Date.now();
 
         for (var i = 0; i < num_species; i++) {
             SPECIES.species[i] = SPECIES.createSpecies(i);
@@ -60,21 +59,32 @@ var GAME = {
         }
 
         if (GAME.gameIsOver()) {
-            delete GAME.species;
-
-            // Delete all remaining creatures
-            for (var x = 0; x < 100; x++) {
-                for (var y = 0; y < 100; y++) {
-                    if (GAME.board[x][y]) {
-                        delete GAME.board[x][y];
-                    }
-                }
-            }
-
-            GAME.createInitialCreatures();
+            GAME.resetGame();
         }
 
         GAME.redraw();
+    },
+
+    resetGame: function() {
+        delete GAME.species;
+
+        // Delete all remaining creatures
+        for (var x = 0; x < 100; x++) {
+            for (var y = 0; y < 100; y++) {
+                if (GAME.board[x][y]) {
+                    delete GAME.board[x][y];
+                }
+            }
+        }
+
+        var gameTime = Date.now() - GAME.startTime;
+        if (gameTime > GAME.max_time) {
+            GAME.max_time = gameTime;
+            document.getElementById("max-time").textContent = "Max time: " + (GAME.max_time / 1000);
+        }
+
+        GAME.createInitialCreatures();
+        GAME.startTime = Date.now();
     },
 
     redraw: function() {
@@ -98,10 +108,6 @@ var GAME = {
     gameIsOver: function() {
         var allDead = true;
         var allEmpty = true;
-
-        if ((Date.now() - GAME.start_time) > GAME.max_time) {
-            return true;
-        }
 
         for (var x = 0; x < 100; x++) {
             for (var y = 0; y < 100; y++) {
@@ -156,6 +162,8 @@ var GAME = {
         if (document.readyState === 'loading') {
             setTimeout(load, 100);
         } else {
+            var reset = document.getElementById("reset");
+            reset.onclick = GAME.resetGame;
             ADAPTER.load();
             GAME.setup();
             setInterval(GAME.gameLoop, 100);
