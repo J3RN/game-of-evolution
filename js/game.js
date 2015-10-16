@@ -4,6 +4,7 @@ var GAME = {
     num_species: 5,
     num_indiv: 100,
     max_time: 0,
+    creatures: [],
 
     setup: function() {
         GAME.createBoard();
@@ -40,6 +41,7 @@ var GAME = {
 
                 var newCreature = new Creature(dna, randomLoc);
 
+                GAME.creatures.push(newCreature);
                 GAME.board[randomLoc.x][randomLoc.y] = newCreature;
             }
         }
@@ -48,25 +50,23 @@ var GAME = {
     },
 
     gameLoop: function() {
-        for (var x = 0; x < 100; x++) {
-            for (var y = 0; y < 100; y++) {
-                var creature = GAME.getItem(x, y);
+        for (var i = 0; i < GAME.creatures.length; i++) {
+            var creature = GAME.creatures[i];
 
-                if (creature) {
-                    creature.act();
-                }
+            if (creature) {
+                creature.act();
             }
         }
+
+        GAME.redraw();
 
         if (GAME.gameIsOver()) {
             GAME.resetGame();
         }
-
-        GAME.redraw();
     },
 
     resetGame: function() {
-        delete GAME.species;
+        var i;
 
         // Delete all remaining creatures
         for (var x = 0; x < 100; x++) {
@@ -77,12 +77,28 @@ var GAME = {
             }
         }
 
+        // Delete all remaining creatures?
+        for (i = 0; i < GAME.creatures.length; i++) {
+            delete GAME.creatures[i];
+        }
+
+        GAME.creatures = [];
+
+        // Delete all species
+        for (i = 0; i < SPECIES.species.length; i++) {
+            delete SPECIES.species[i];
+        }
+
+        SPECIES.species = [];
+
+        // Get gametime. Update page if necessary
         var gameTime = Date.now() - GAME.startTime;
         if (gameTime > GAME.max_time) {
             GAME.max_time = gameTime;
             document.getElementById("max-time").textContent = "Max time: " + (GAME.max_time / 1000);
         }
 
+        // Create new creatures, restart game timer
         GAME.createInitialCreatures();
         GAME.startTime = Date.now();
     },

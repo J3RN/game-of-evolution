@@ -194,7 +194,10 @@ Creature.prototype = {
             var new_dna = DNA.mergeDNA(this, creature);
 
             if (childLocation) {
-                GAME.board[childLocation.x][childLocation.y] = new Creature(new_dna, childLocation);
+                var child = new Creature(new_dna, childLocation);
+
+                GAME.board[childLocation.x][childLocation.y] = child;
+                GAME.creatures.push(child);
             }
         }
     },
