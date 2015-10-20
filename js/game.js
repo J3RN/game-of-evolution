@@ -2,7 +2,7 @@
 
 var GAME = {
     num_species: 10,
-    num_indiv: 1000,
+    num_indiv: 500,
     max_turns: 0,
     turns: 0,
     creatures: [],
