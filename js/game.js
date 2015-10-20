@@ -66,6 +66,8 @@ var GAME = {
         GAME.turns++;
         GAME.redraw();
 
+        document.getElementById("game-turn").textContent = "Turn: " + GAME.turns;
+
         if (GAME.gameIsOver()) {
             GAME.resetGame();
         }
