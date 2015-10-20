@@ -4,8 +4,8 @@ var ADAPTER = {
         ADAPTER.ctx = canvas.getContext('2d');
     },
 
-    setCell: function(x, y, rgb) {
-        ADAPTER.ctx.fillStyle = 'rgb(' + rgb.join(',') + ')';
+    setCell: function(x, y, hsl) {
+        ADAPTER.ctx.fillStyle = 'hsl(' + hsl.join(',') + ')';
         ADAPTER.ctx.fillRect(x * 5, y * 5, 5, 5);
     }
 };

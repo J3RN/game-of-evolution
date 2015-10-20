@@ -2,7 +2,7 @@
 
 var GAME = {
     num_species: 10,
-    num_indiv: 500,
+    num_indiv: 1000,
     max_turns: 0,
     turns: 0,
     creatures: [],
@@ -117,12 +117,12 @@ var GAME = {
 
                 if (creature) {
                     if (creature.dead) {
-                        ADAPTER.setCell(x, y, [0, 0, 0]);
+                        ADAPTER.setCell(x, y, [creature.color, "100%", "30%"]);
                     } else {
-                        ADAPTER.setCell(x, y, creature.color);
+                        ADAPTER.setCell(x, y, [creature.color, "100%", "50%"]);
                     }
                 } else {
-                    ADAPTER.setCell(x, y, [255, 255, 255]);
+                    ADAPTER.setCell(x, y, [0, "100%", "100%"]);
                 }
             }
         }

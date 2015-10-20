@@ -6,14 +6,6 @@ var SPECIES = {
     },
 
     randomColor: function() {
-        return [
-            SPECIES.randomRGB(),
-            SPECIES.randomRGB(),
-            SPECIES.randomRGB()
-        ]
-    },
-
-    randomRGB: function() {
-        return Math.floor(Math.random() * 254) + 1;
+        return Math.floor(Math.random() * 360)
     },
 }
