@@ -17,18 +17,14 @@ Check out a live running version [on my website](http:/j3rn.com/goe).
 - Individuals can eat any other individuals, in accordance with their DNA.
 - Individuals have a size (1 - 10, inclusive). Individuals can only eat other individuals that are smaller than them.
     - TODO: Hitpoints?
-- Individuals have a speed, but it is not currently used.
-    - TODO: Make it do something
-- TODO: Memory system?
 
 ### Game
 
 - The game will end only by one of the following:
     - All individuals are dead
-    - The maximum time (30 seconds) have expired
 - The game starts with:
-    - 20 species
-    - 600 individuals (30 per species)
+    - 10 species
+    - 500 individuals (50 per species)
 
 ## Development
 
@@ -57,7 +53,7 @@ There is also `js/canvas_adapter.js`, but it should not need to be modified othe
 
 - Handles creation of DNA
 - Handles merging of DNA to create a new individual
-    - TODO: Possible mutation
+- When merging DNA, there is a 1% chance of a random mutation
 
 ### `species.js`
 
