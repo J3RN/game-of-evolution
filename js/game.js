@@ -117,7 +117,7 @@ var GAME = {
 
                 if (creature) {
                     if (creature.dead) {
-                        ADAPTER.setCell(x, y, [creature.color, "100%", "30%"]);
+                        ADAPTER.setCell(x, y, [creature.color, "75%", "30%"]);
                     } else {
                         ADAPTER.setCell(x, y, [creature.color, "100%", "50%"]);
                     }
