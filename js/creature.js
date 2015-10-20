@@ -65,8 +65,7 @@ var Creature = function(dna, loc) {
     this.species = dna[0];
     this.color = SPECIES.species[this.species];
     this.size = dna[1];
-    this.behavior = dna.slice(2, 6);
-    this.speed = dna[6];
+    this.behavior = dna.slice(2, 8);
 
     this.loc = loc;
     this.age = 0;
@@ -87,7 +86,9 @@ Creature.prototype = {
         enemy: 0,
         friend: 1,
         empty: 2,
-        wall: 3
+        wall: 3,
+        dead_friend: 4,
+        dead_enemy: 5,
     },
 
     actions: {
@@ -114,9 +115,17 @@ Creature.prototype = {
 
             if (target) {
                 if (target.species === this.species) {
-                    return this.entities.friend;
+                    if (target.dead) {
+                        return this.entities.dead_friend;
+                    } else {
+                        return this.entities.friend;
+                    }
                 } else {
-                    return this.entities.enemy;
+                    if (target.dead) {
+                        return this.entities.dead_enemy;
+                    } else {
+                        return this.entities.enemy;
+                    }
                 }
             } else {
                 return this.entities.empty;

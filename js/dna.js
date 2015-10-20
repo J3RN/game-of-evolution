@@ -7,7 +7,8 @@ var DNA = {
             DNA.randomBehavior(),
             DNA.randomBehavior(),
             DNA.randomBehavior(),
-            0,
+            DNA.randomBehavior(),
+            DNA.randomBehavior(),
         ];
     },
 
@@ -32,15 +33,14 @@ var DNA = {
 
     decodeDNA: function(dna) {
         var actions = [ "eat", "mate", "turn left", "turn right", "move" ];
-        var names = [ "Enemy", "Friend", "Empty", "Wall" ];
+        var names = [ "Enemy", "Friend", "Empty", "Wall", "Dead Friend", "Dead Enemy" ];
 
         console.log("Species: " + dna[0]);
         console.log("Size: " + dna[1]);
-        console.log("Speed: " + dna[6]);
 
         // Behavior
         var i;
-        for (i = 2; i < 6; i++) {
+        for (i = 2; i < 8; i++) {
             console.log(names[i - 2] + ": " + actions[dna[i]]);
         }
     },
