@@ -192,9 +192,9 @@ Creature.prototype = {
 
         if (creature && this.species === creature.species) {
             var childLocation = CREATURE.spawnLocation(this) || CREATURE.spawnLocation(creature);
-            var new_dna = DNA.mergeDNA(this, creature);
 
             if (childLocation) {
+                var new_dna = DNA.mergeDNA(this, creature);
                 var child = new Creature(new_dna, childLocation);
 
                 GAME.board[childLocation.x][childLocation.y] = child;
