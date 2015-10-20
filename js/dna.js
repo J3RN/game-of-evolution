@@ -24,6 +24,13 @@ var DNA = {
             }
         }
 
+        // 1% chance of mutation
+        if (Math.random() <= 0.01) {
+            console.log("Mutation");
+            index = Math.floor(Math.random() * 6) + 2;
+            new_dna[index] = DNA.randomBehavior();
+        }
+
         return new_dna;
     },
 
