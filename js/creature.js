@@ -181,6 +181,7 @@ Creature.prototype = {
         if (creature && (creature.dead || this.size > creature.size)) {
             // Remove creature
             delete GAME.board[creature.loc.x][creature.loc.y];
+            delete GAME.creatures[GAME.creatures.indexOf(creature)];
 
             this.food++;
         }

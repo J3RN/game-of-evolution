@@ -1,8 +1,8 @@
 'use strict';
 
 var GAME = {
-    num_species: 5,
-    num_indiv: 100,
+    num_species: 10,
+    num_indiv: 500,
     max_turns: 0,
     turns: 0,
     creatures: [],
@@ -57,6 +57,11 @@ var GAME = {
                 creature.act();
             }
         }
+
+        // Clear out 'undefined's
+        GAME.creatures = GAME.creatures.filter(function(x) {
+            return x !== undefined;
+        })
 
         GAME.turns++;
         GAME.redraw();
