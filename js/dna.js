@@ -1,3 +1,5 @@
+'use strict';
+
 var DNA = {
     generateDNA: function(species) {
         return [
@@ -26,7 +28,7 @@ var DNA = {
 
         // 1% chance of mutation
         if (Math.random() <= 0.01) {
-            index = Math.floor(Math.random() * 6) + 2;
+            var index = Math.floor(Math.random() * 6) + 2;
             new_dna[index] = DNA.randomBehavior();
         }
 
@@ -37,18 +39,28 @@ var DNA = {
         return Math.floor(Math.random() * 5);
     },
 
-    decodeDNA: function(dna) {
+    describeDNA: function(dna) {
+        var description = {};
         var actions = [ "eat", "mate", "turn left", "turn right", "move" ];
         var names = [ "Enemy", "Friend", "Empty", "Wall", "Dead Friend", "Dead Enemy" ];
 
-        console.log("Species: " + dna[0]);
-        console.log("Size: " + dna[1]);
+        description["Species"] = dna[0];
+        description["Size"] = dna[1];
 
         // Behavior
         var i;
         for (i = 2; i < 8; i++) {
-            console.log(names[i - 2] + ": " + actions[dna[i]]);
+            description[names[i - 2]] = actions[dna[i]];
         }
+
+        return description;
+    },
+
+    decodeDNA: function(dna) {
+        var description = this.describeDNA(dna);
+        Object.keys(description).forEach(function(item) {
+            console.log(item + ": " + description[item]);
+        });
     },
 }
 

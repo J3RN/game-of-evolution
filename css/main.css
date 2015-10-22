@@ -17,3 +17,7 @@ canvas {
   padding: 5px;
   border: 1px solid black;
 }
+
+table, td {
+  border: 1px solid black;
+}
