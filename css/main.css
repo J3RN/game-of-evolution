@@ -11,6 +11,7 @@ canvas {
 }
 
 #control {
+  background: white;
   position: fixed;
   top: 0;
   right: 0;
@@ -19,5 +20,6 @@ canvas {
 }
 
 table, td {
+  text-align: left;
   border: 1px solid black;
 }
