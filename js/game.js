@@ -1,7 +1,6 @@
 'use strict';
 
 var GAME = {
-    num_species: 10,
     num_indiv: 500,
     max_turns: 0,
     turns: 0,
@@ -25,25 +24,20 @@ var GAME = {
     },
 
     createInitialCreatures: function() {
-        var num_species = GAME.num_species;
         var num_indiv = GAME.num_indiv;
 
-        for (var i = 0; i < num_species; i++) {
-            SPECIES.species[i] = SPECIES.createSpecies(i);
+        for (var j = 0; j < num_indiv; j++) {
+            var dna = DNA.generateDNA();
+            var randomLoc = GAME.randomLocation();
 
-            for (var j = 0; j < (num_indiv / num_species); j++) {
-                var dna = DNA.generateDNA(i);
-                var randomLoc = GAME.randomLocation();
-
-                while (GAME.getItem(randomLoc.x, randomLoc.y)) {
-                    randomLoc = GAME.randomLocation();
-                }
-
-                var newCreature = new Creature(dna, randomLoc);
-
-                GAME.creatures.push(newCreature);
-                GAME.board[randomLoc.x][randomLoc.y] = newCreature;
+            while (GAME.getItem(randomLoc.x, randomLoc.y)) {
+                randomLoc = GAME.randomLocation();
             }
+
+            var newCreature = new Creature(dna, randomLoc);
+
+            GAME.creatures.push(newCreature);
+            GAME.board[randomLoc.x][randomLoc.y] = newCreature;
         }
 
         GAME.redraw();
@@ -91,13 +85,6 @@ var GAME = {
         }
 
         GAME.creatures = [];
-
-        // Delete all species
-        for (i = 0; i < SPECIES.species.length; i++) {
-            delete SPECIES.species[i];
-        }
-
-        SPECIES.species = [];
 
         // Update max turns if necessary
         if (GAME.turns > GAME.max_turns) {

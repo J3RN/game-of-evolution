@@ -62,8 +62,7 @@ var Creature = function(dna, loc) {
     }
 
     this.dna = dna;
-    this.species = dna[0];
-    this.color = SPECIES.species[this.species];
+    this.color = dna[0];
     this.size = dna[1];
     this.behavior = dna.slice(2, 8);
 
@@ -114,7 +113,7 @@ Creature.prototype = {
             var target = this.getCreatureBefore();
 
             if (target) {
-                if (target.species === this.species) {
+                if (target.dna === this.dna) {
                     if (target.dead) {
                         return this.entities.dead_friend;
                     } else {
@@ -154,10 +153,10 @@ Creature.prototype = {
         if (!this.dead) {
             this.age += 1;
 
-            // Decrease food every 10 turns
-            if (this.age % 20 === 0) {
-                this.food--;
-            }
+            // Decrease food every 20 turns
+            // if (this.age % 20 === 0) {
+            //     this.food--;
+            // }
 
             var behavior = this.behavior[this.getBefore()];
             switch(behavior) {
@@ -197,17 +196,17 @@ Creature.prototype = {
     },
 
     mate: function() {
-        var creature = this.getCreatureBefore();
-
-        if (creature && this.species === creature.species) {
-            var childLocation = CREATURE.spawnLocation(this) || CREATURE.spawnLocation(creature);
+        if (this.food > 0) {
+            var childLocation = CREATURE.spawnLocation(this);
 
             if (childLocation) {
-                var new_dna = DNA.mergeDNA(this, creature);
+                var new_dna = DNA.copyDNA(this.dna);
                 var child = new Creature(new_dna, childLocation);
 
                 GAME.board[childLocation.x][childLocation.y] = child;
                 GAME.creatures.push(child);
+
+                this.food--;
             }
         }
     },
