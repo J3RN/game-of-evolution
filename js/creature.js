@@ -153,10 +153,6 @@ Creature.prototype = {
         if (!this.dead) {
             this.age += 1;
 
-            // Decrease food every 20 turns
-            // if (this.age % 20 === 0) {
-            //     this.food--;
-            // }
 
             var behavior = this.behavior[this.getBefore()];
             switch(behavior) {
@@ -177,7 +173,9 @@ Creature.prototype = {
                     break;
             }
 
-            if (this.age > CREATURE.max_lifespan || this.food < 0) {
+            // No food or too old? Die
+            if ((this.age % CREATURE.max_time_without_food === 0 && this.food === 0) ||
+                    this.age > CREATURE.max_lifespan) {
                 this.die();
             }
         }
