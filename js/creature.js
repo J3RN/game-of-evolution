@@ -9,26 +9,19 @@ var CREATURE = {
     },
 
     spawnLocation: function(creature) {
-        // Only spawn left an right
-        var dir = creature.direction;
+        var xs = [creature.loc.x - 1, creature.loc.x + 1];
+        var ys = [creature.loc.y - 1, creature.loc.y + 1];
+
+        var y = creature.loc.y;
+        var x = creature.loc.x;
 
         var possibleLocs = [];
-
-        if (dir === creature.directions.up || dir === creature.directions.down) {
-            var xs = [creature.loc.x - 1, creature.loc.x + 1];
-            var y = creature.loc.y;
-
-            xs.forEach(function(x) {
-                possibleLocs.push({ x: x, y: y });
-            });
-        } else {
-            var ys = [creature.loc.y - 1, creature.loc.y + 1];
-            var x = creature.loc.x;
-
-            ys.forEach(function(y) {
-                possibleLocs.push({ x: x, y: y });
-            });
-        }
+        ys.forEach(function(newY) {
+            possibleLocs.push({ x: x, y: newY });
+        });
+        xs.forEach(function(newX) {
+            possibleLocs.push({ x: newX, y: y });
+        });
 
         var locs = possibleLocs.filter(function(loc) {
             if (GAME.getItem(loc.x, loc.y) || GAME.isOutOfBounds(loc)) {
