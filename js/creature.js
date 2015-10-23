@@ -191,7 +191,7 @@ Creature.prototype = {
             delete GAME.board[creature.loc.x][creature.loc.y];
             delete GAME.creatures[GAME.creatures.indexOf(creature)];
 
-            this.food++;
+            this.food += creature.food + 1;
         }
     },
 

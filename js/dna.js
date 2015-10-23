@@ -43,7 +43,7 @@ var DNA = {
         });
 
         if (Math.random() <= 0.01) {
-            index = Math.floor(Math.random() * 6) + 2;
+            var index = Math.floor(Math.random() * 6) + 2;
             new_dna[index] = DNA.randomBehavior();
         }
 

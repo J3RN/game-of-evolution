@@ -1,7 +1,7 @@
 'use strict';
 
 var GAME = {
-    num_indiv: 500,
+    num_indiv: 700,
     max_turns: 0,
     turns: 0,
     creatures: [],
@@ -57,10 +57,13 @@ var GAME = {
             return x !== undefined;
         })
 
+        var mass = GAME.creatures.length + GAME.creatures.reduce(function(acc, creature) {
+            return acc + creature.food;
+        }, 0);
+        console.log(mass);
+
         GAME.turns++;
         GAME.redraw();
-
-        document.getElementById("game-turn").textContent = "Turn: " + GAME.turns;
 
         if (GAME.gameIsOver()) {
             GAME.resetGame();
@@ -98,6 +101,9 @@ var GAME = {
     },
 
     redraw: function() {
+        document.getElementById("game-turn").textContent = "Turn: " + GAME.turns;
+        document.getElementById("creature-count").textContent = "Creatures: " + GAME.creatures.length;
+
         for (var x = 0; x < 100; x++) {
             for (var y = 0; y < 100; y++) {
                 var creature = GAME.getItem(x, y);
