@@ -196,17 +196,23 @@ Creature.prototype = {
     },
 
     mate: function() {
-        if (this.food > 0) {
+        if (this.age > 0 && this.food > 1) {
             var childLocation = CREATURE.spawnLocation(this);
 
             if (childLocation) {
                 var new_dna = DNA.copyDNA(this.dna);
                 var child = new Creature(new_dna, childLocation);
 
+                // Subtract one for new creature
+                this.food--;
+
+                // Split food evenly among parent and child
+                var rem = this.food % 2;
+                child.food = Math.floor(this.food / 2) + rem;
+                this.food = Math.floor(this.food / 2);
+
                 GAME.board[childLocation.x][childLocation.y] = child;
                 GAME.creatures.push(child);
-
-                this.food--;
             }
         }
     },
