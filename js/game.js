@@ -1,7 +1,7 @@
 'use strict';
 
 var GAME = {
-    num_indiv: 5000,
+    num_indiv: 2500,
     max_turns: 0,
     turns: 0,
     creatures: [],
@@ -97,7 +97,20 @@ var GAME = {
 
     redraw: function() {
         document.getElementById("game-turn").textContent = "Turn: " + GAME.turns;
-        document.getElementById("creature-count").textContent = "Creatures: " + GAME.creatures.length;
+
+        var total = GAME.creatures.length;
+        var alive = GAME.creatures.filter(function(x) {
+            return !x.dead;
+        }).length;
+        document.getElementById("creature-count").textContent = total;
+        document.getElementById("alive").textContent = alive;
+        document.getElementById("dead").textContent = total - alive;
+
+        var avg_size = GAME.creatures.reduce(function(acc, item) {
+            return acc + item.size;
+        }, 0) / GAME.creatures.length;
+
+        document.getElementById("avg-size").textContent = "Average Size: " + avg_size.toFixed(2);
 
         for (var x = 0; x < 100; x++) {
             for (var y = 0; y < 100; y++) {
