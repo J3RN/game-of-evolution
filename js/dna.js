@@ -56,7 +56,7 @@ var DNA = {
 
     describeDNA: function(dna) {
         var description = {};
-        var actions = [ "eat", "mate", "turn left", "turn right", "move" ];
+        var actions = [ "eat", "reproduce", "turn left", "turn right", "move" ];
         var names = [ "Enemy", "Friend", "Empty", "Wall", "Dead Friend", "Dead Enemy" ];
 
         description["Color"] = dna[0];
