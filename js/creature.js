@@ -106,7 +106,7 @@ Creature.prototype = {
             var target = this.getCreatureBefore();
 
             if (target) {
-                if (target.dna === this.dna) {
+                if (DNA.sameDNA(target.dna, this.dna)) {
                     if (target.dead) {
                         return this.entities.dead_friend;
                     } else {

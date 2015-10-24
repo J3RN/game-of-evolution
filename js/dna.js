@@ -14,6 +14,18 @@ var DNA = {
         ];
     },
 
+    sameDNA: function(one, two) {
+        var allSame = true;
+
+        one.forEach(function(x, i) {
+            if (x !== two[i]) {
+                allSame = false;
+            }
+        });
+
+        return allSame;
+    },
+
     mergeDNA: function(indiv1, indiv2) {
         var dna_length = indiv1.dna.length;
         var new_dna = [];
