@@ -1,8 +1,7 @@
 'use strict';
 
 var GAME = {
-    num_species: 10,
-    num_indiv: 500,
+    num_indiv: 2500,
     max_turns: 0,
     turns: 0,
     creatures: [],
@@ -25,25 +24,20 @@ var GAME = {
     },
 
     createInitialCreatures: function() {
-        var num_species = GAME.num_species;
         var num_indiv = GAME.num_indiv;
 
-        for (var i = 0; i < num_species; i++) {
-            SPECIES.species[i] = SPECIES.createSpecies(i);
+        for (var j = 0; j < num_indiv; j++) {
+            var dna = DNA.generateDNA();
+            var randomLoc = GAME.randomLocation();
 
-            for (var j = 0; j < (num_indiv / num_species); j++) {
-                var dna = DNA.generateDNA(i);
-                var randomLoc = GAME.randomLocation();
-
-                while (GAME.getItem(randomLoc.x, randomLoc.y)) {
-                    randomLoc = GAME.randomLocation();
-                }
-
-                var newCreature = new Creature(dna, randomLoc);
-
-                GAME.creatures.push(newCreature);
-                GAME.board[randomLoc.x][randomLoc.y] = newCreature;
+            while (GAME.getItem(randomLoc.x, randomLoc.y)) {
+                randomLoc = GAME.randomLocation();
             }
+
+            var newCreature = new Creature(dna, randomLoc);
+
+            GAME.creatures.push(newCreature);
+            GAME.board[randomLoc.x][randomLoc.y] = newCreature;
         }
 
         GAME.redraw();
@@ -65,8 +59,6 @@ var GAME = {
 
         GAME.turns++;
         GAME.redraw();
-
-        document.getElementById("game-turn").textContent = "Turn: " + GAME.turns;
 
         if (GAME.gameIsOver()) {
             GAME.resetGame();
@@ -92,13 +84,6 @@ var GAME = {
 
         GAME.creatures = [];
 
-        // Delete all species
-        for (i = 0; i < SPECIES.species.length; i++) {
-            delete SPECIES.species[i];
-        }
-
-        SPECIES.species = [];
-
         // Update max turns if necessary
         if (GAME.turns > GAME.max_turns) {
             GAME.max_turns = GAME.turns;
@@ -111,6 +96,22 @@ var GAME = {
     },
 
     redraw: function() {
+        document.getElementById("game-turn").textContent = "Turn: " + GAME.turns;
+
+        var total = GAME.creatures.length;
+        var alive = GAME.creatures.filter(function(x) {
+            return !x.dead;
+        }).length;
+        document.getElementById("creature-count").textContent = total;
+        document.getElementById("alive").textContent = alive;
+        document.getElementById("dead").textContent = total - alive;
+
+        var avg_size = GAME.creatures.reduce(function(acc, item) {
+            return acc + item.size;
+        }, 0) / GAME.creatures.length;
+
+        document.getElementById("avg-size").textContent = "Average Size: " + avg_size.toFixed(2);
+
         for (var x = 0; x < 100; x++) {
             for (var y = 0; y < 100; y++) {
                 var creature = GAME.getItem(x, y);

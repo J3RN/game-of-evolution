@@ -4,7 +4,6 @@
     <title>Darwin's Game of Evolution</title>
     <link rel='stylesheet' href='css/main.css' />
     <script src='js/canvas_adapter.js'></script>
-    <script src='js/species.js'></script>
     <script src='js/dna.js'></script>
     <script src='js/creature.js'></script>
     <script src='js/game.js'></script>
@@ -15,13 +14,30 @@
     <a href="https://github.com/j3rn/game-of-evolution"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"></a>
     <canvas width=500 height=500 id='canvas' onmousemove="inspectCreature(event);"></canvas>
     <div id="control">
-      <span id="game-turn">Turn: 0</span><br />
-      <span id="max-time">Max turns: 0</span><br />
-      <button id="reset">Reset</button><br />
-      <br />
+      <div id="game-turn">Turn: 0</div>
+      <div id="max-time">Max turns: 0</div>
+      <div id="avg-size">Average Size: 0</div>
+      <h3>Creatures</h3>
       <table>
         <tbody>
-          <tr><td>Species</td><td id="Species"></td></tr>
+          <tr>
+            <td>Alive</td>
+            <td id="alive"></td>
+          </tr>
+          <tr>
+            <td>Dead</td>
+            <td id="dead"></td>
+          </tr>
+          <tr>
+            <td>Total</td>
+            <td id="creature-count"></td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Creature DNA</h3>
+      <table>
+        <tbody>
+          <tr><td>Color</td><td id="Color"></td></tr>
           <tr><td>Size</td><td id="Size"></td></tr>
           <tr><td>Enemy</td><td id="Enemy"></td></tr>
           <tr><td>Friend</td><td id="Friend"></td></tr>
@@ -31,6 +47,7 @@
           <tr><td>Dead Enemy</td><td id="Dead Enemy"></td></tr>
         </tbody>
       </table>
+      <button id="reset">Reset</button>
     </div>
   </body>
 </html>

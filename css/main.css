@@ -19,6 +19,17 @@ canvas {
   border: 1px solid black;
 }
 
+button {
+  font-size: 1.5em;
+  padding: 5px;
+  margin-top: 15px;
+}
+
+table {
+  width: 100%;
+  margin-top: 15px;
+}
+
 table, td {
   text-align: left;
   border: 1px solid black;

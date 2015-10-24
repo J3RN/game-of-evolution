@@ -9,26 +9,19 @@ var CREATURE = {
     },
 
     spawnLocation: function(creature) {
-        // Only spawn left an right
-        var dir = creature.direction;
+        var xs = [creature.loc.x - 1, creature.loc.x + 1];
+        var ys = [creature.loc.y - 1, creature.loc.y + 1];
+
+        var y = creature.loc.y;
+        var x = creature.loc.x;
 
         var possibleLocs = [];
-
-        if (dir === creature.directions.up || dir === creature.directions.down) {
-            var xs = [creature.loc.x - 1, creature.loc.x + 1];
-            var y = creature.loc.y;
-
-            xs.forEach(function(x) {
-                possibleLocs.push({ x: x, y: y });
-            });
-        } else {
-            var ys = [creature.loc.y - 1, creature.loc.y + 1];
-            var x = creature.loc.x;
-
-            ys.forEach(function(y) {
-                possibleLocs.push({ x: x, y: y });
-            });
-        }
+        ys.forEach(function(newY) {
+            possibleLocs.push({ x: x, y: newY });
+        });
+        xs.forEach(function(newX) {
+            possibleLocs.push({ x: newX, y: y });
+        });
 
         var locs = possibleLocs.filter(function(loc) {
             if (GAME.getItem(loc.x, loc.y) || GAME.isOutOfBounds(loc)) {
@@ -62,8 +55,7 @@ var Creature = function(dna, loc) {
     }
 
     this.dna = dna;
-    this.species = dna[0];
-    this.color = SPECIES.species[this.species];
+    this.color = dna[0];
     this.size = dna[1];
     this.behavior = dna.slice(2, 8);
 
@@ -114,7 +106,7 @@ Creature.prototype = {
             var target = this.getCreatureBefore();
 
             if (target) {
-                if (target.species === this.species) {
+                if (target.dna === this.dna) {
                     if (target.dead) {
                         return this.entities.dead_friend;
                     } else {
@@ -154,10 +146,6 @@ Creature.prototype = {
         if (!this.dead) {
             this.age += 1;
 
-            // Decrease food every 10 turns
-            if (this.age % 20 === 0) {
-                this.food--;
-            }
 
             var behavior = this.behavior[this.getBefore()];
             switch(behavior) {
@@ -178,7 +166,9 @@ Creature.prototype = {
                     break;
             }
 
-            if (this.age > CREATURE.max_lifespan || this.food < 0) {
+            // No food or too old? Die
+            if ((this.age % CREATURE.max_time_without_food === 0 && this.food === 0) ||
+                    this.age > CREATURE.max_lifespan) {
                 this.die();
             }
         }
@@ -192,19 +182,25 @@ Creature.prototype = {
             delete GAME.board[creature.loc.x][creature.loc.y];
             delete GAME.creatures[GAME.creatures.indexOf(creature)];
 
-            this.food++;
+            this.food += creature.food + 1;
         }
     },
 
     mate: function() {
-        var creature = this.getCreatureBefore();
-
-        if (creature && this.species === creature.species) {
-            var childLocation = CREATURE.spawnLocation(this) || CREATURE.spawnLocation(creature);
+        if (this.age > 0 && this.food > 1) {
+            var childLocation = CREATURE.spawnLocation(this);
 
             if (childLocation) {
-                var new_dna = DNA.mergeDNA(this, creature);
+                var new_dna = DNA.copyDNA(this.dna);
                 var child = new Creature(new_dna, childLocation);
+
+                // Subtract one for new creature
+                this.food--;
+
+                // Split food evenly among parent and child
+                var rem = this.food % 2;
+                child.food = Math.floor(this.food / 2) + rem;
+                this.food = Math.floor(this.food / 2);
 
                 GAME.board[childLocation.x][childLocation.y] = child;
                 GAME.creatures.push(child);
