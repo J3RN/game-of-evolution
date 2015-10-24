@@ -57,11 +57,6 @@ var GAME = {
             return x !== undefined;
         })
 
-        var mass = GAME.creatures.length + GAME.creatures.reduce(function(acc, creature) {
-            return acc + creature.food;
-        }, 0);
-        console.log(mass);
-
         GAME.turns++;
         GAME.redraw();
 
