@@ -9,9 +9,9 @@ Check out a live running version [on my website](http:/j3rn.com/goe).
 
 ### Individuals
 
-- Each color represents a species. Individuals can only mate with other individuals in their species.
-- When mating, the offspring can appear on the left or right of a mating pair (their left and right).
-- Offspring have a set of DNA that is a arbitrary subset of constant size of the union of it's parents DNA strands.
+- Individuals mate asexually.
+- When reproducing, the offspring can appear on any of the four spaces around the parent, top, right, bottom, or left.
+- Offspring have a copy of their parent's DNA, with a %1 chance of a random mutation.
 - Individuals who do not eat after 25 turns (2.5 seconds) die of starvation.
 - Individuals have a maximum lifespan (10 seconds).
 - Individuals can eat any other individuals, in accordance with their DNA.
@@ -22,9 +22,8 @@ Check out a live running version [on my website](http:/j3rn.com/goe).
 
 - The game will end only by one of the following:
     - All individuals are dead
-- The game starts with:
-    - 10 species
-    - 500 individuals (50 per species)
+    - The "Reset" button is pressed
+- The game starts with 5000 individuals
 
 ## Development
 
@@ -32,7 +31,7 @@ The game code is in four files:
 - `js/game.js`
 - `js/creature.js`
 - `js/dna.js`
-- `js/species.js`
+- `js/inspect.js`
 
 There is also `js/canvas_adapter.js`, but it should not need to be modified other than for performance reasons.
 
@@ -40,7 +39,7 @@ There is also `js/canvas_adapter.js`, but it should not need to be modified othe
 
 - Should contain all non-creature game logic
 - Creates the board
-- Creates species and individuals and places them on the board
+- Creates individuals and places them on the board
 - Redraws the game
 - Restarts the game when it is "over", as defined above
 
@@ -52,10 +51,8 @@ There is also `js/canvas_adapter.js`, but it should not need to be modified othe
 ### `dna.js`
 
 - Handles creation of DNA
-- Handles merging of DNA to create a new individual
-- When merging DNA, there is a 1% chance of a random mutation
+- Handles copying of DNA
 
-### `species.js`
+### `inspect.js`
 
-- Holds all species
-- Handles creation of new species
+- Handles the mouse-over action of showing the creature's DNA
