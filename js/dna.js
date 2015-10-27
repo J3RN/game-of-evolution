@@ -63,12 +63,12 @@ var DNA = {
     },
 
     randomBehavior: function() {
-        return Math.floor(Math.random() * 5);
+        return Math.floor(Math.random() * 6);
     },
 
     describeDNA: function(dna) {
         var description = {};
-        var actions = [ "eat", "reproduce", "turn left", "turn right", "move" ];
+        var actions = [ "eat", "reproduce", "turn left", "turn right", "move", "turn around" ];
         var names = [ "Enemy", "Friend", "Empty", "Wall", "Dead Friend", "Dead Enemy" ];
 
         description["Color"] = dna[0];

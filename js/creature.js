@@ -88,7 +88,8 @@ Creature.prototype = {
         mate: 1,
         turn_left: 2,
         turn_right: 3,
-        move: 4
+        move: 4,
+        turn_around: 5,
     },
 
     getBefore: function() {
@@ -163,6 +164,9 @@ Creature.prototype = {
                     break;
                 case this.actions.move:
                     this.move();
+                    break;
+                case this.actions.turn_around:
+                    this.turn_around();
                     break;
             }
 
@@ -248,6 +252,14 @@ Creature.prototype = {
             var newLoc = { x: this.loc.x, y: this.loc.y };
             GAME.moveItem(oldLoc, newLoc);
         }
+    },
+
+    turn_around: function() {
+        var newDirection = this.direction - 2;
+        if (newDirection < 0) {
+            newDirection += 4;
+        }
+        this.direction = newDirection;
     },
 
     die: function() {
