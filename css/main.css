@@ -1,7 +1,12 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
 html, body {
   padding: 0;
   margin: 0;
   text-align: center;
+  color: #282828;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
 }
 
 canvas {
@@ -36,7 +41,7 @@ button {
 table {
   margin-top: 3em;
   box-sizing: border-box;
-  width: 12.5em;
+  width: 15em;
 }
 
 table, td {
