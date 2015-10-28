@@ -4,6 +4,11 @@ html, body {
   text-align: center;
 }
 
+td {
+	width: 50%;
+}
+
+
 canvas {
   border: 1px solid black;
   height: 98vmin;
@@ -26,7 +31,7 @@ button {
 }
 
 table {
-  width: 100%;
+  width: 16em;
   margin-top: 15px;
 }
 
