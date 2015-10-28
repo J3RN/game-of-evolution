@@ -44,11 +44,11 @@ table, td {
 }
 
 td {
-  /*display: inline-table;*/
   height: 1.5em;
   line-height: 1.5em;
   vertical-align: middle;
   padding: 0 0.5em;
+  width: 50%;
 }
 
 thead td {
@@ -56,24 +56,12 @@ thead td {
     width: 100%;
 }
 
-/*thead tr {
-  border: none;
-}*/
-
-tr {
-  display: flex;
-}
-
 thead tr {
   border-bottom: 2px solid #DBDBDB;
 }
 
-/*tr:first-of-type {
-  border-top: 1px solid #DBDBDB;
-}*/
-
-td {
-  width: 50%;
+tr {
+  display: flex;
 }
 
 table, #control {
