@@ -1,7 +1,12 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
 html, body {
   padding: 0;
   margin: 0;
   text-align: center;
+  color: #282828;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
 }
 
 td {
@@ -39,9 +44,9 @@ button {
 }
 
 table {
-  width: 13em;
   margin-top: 3em;
   box-sizing: border-box;
+  width: 15em;
 }
 
 table, td {
