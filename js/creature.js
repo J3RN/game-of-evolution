@@ -55,9 +55,9 @@ var Creature = function(dna, loc) {
     }
 
     this.dna = dna;
-    this.color = dna[0];
-    this.size = dna[1];
-    this.behavior = dna.slice(2, 8);
+    this.color = DNA.computeColor(this.dna);
+    this.size = dna[0];
+    this.behavior = dna.slice(1, 7);
 
     this.loc = loc;
     this.age = 0;

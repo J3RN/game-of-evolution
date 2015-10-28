@@ -1,17 +1,16 @@
 'use strict';
 
 var DNA = {
+    length: 7,
+
     generateDNA: function() {
-        return [
-            this.randomColor(),
-            Math.ceil(Math.random() * 10),
-            DNA.randomBehavior(),
-            DNA.randomBehavior(),
-            DNA.randomBehavior(),
-            DNA.randomBehavior(),
-            DNA.randomBehavior(),
-            DNA.randomBehavior(),
-        ];
+        var dna = [];
+
+        for(var i = 0; i < DNA.length; i++) {
+            dna.push(DNA.randomBehavior());
+        }
+
+        return dna;
     },
 
     sameDNA: function(one, two) {
@@ -71,13 +70,15 @@ var DNA = {
         var actions = [ "eat", "reproduce", "turn left", "turn right", "move", "turn around" ];
         var names = [ "Enemy", "Friend", "Empty", "Wall", "Dead Friend", "Dead Enemy" ];
 
-        description["Color"] = dna[0];
-        description["Size"] = dna[1];
+        // Color
+        description["Color"] = DNA.computeColor(dna);
+
+        // Size
+        description["Size"] = dna[0];
 
         // Behavior
-        var i;
-        for (i = 2; i < 8; i++) {
-            description[names[i - 2]] = actions[dna[i]];
+        for (var i = 1; i < DNA.length; i++) {
+            description[names[i - 1]] = actions[dna[i]];
         }
 
         return description;
@@ -90,8 +91,14 @@ var DNA = {
         });
     },
 
-    randomColor: function() {
-        return Math.floor(Math.random() * 360)
+    computeColor: function(dna) {
+        var max = 5 * DNA.length;
+
+        var option = dna.reduce(function(acc, x) {
+            return acc + x;
+        }, 0);
+
+        return Math.floor(360 * (option / max));
     },
 }
 
