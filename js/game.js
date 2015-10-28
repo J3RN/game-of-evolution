@@ -1,7 +1,7 @@
 'use strict';
 
 var GAME = {
-    num_indiv: 5000,
+    num_indiv: 2000,
     max_turns: 0,
     turns: 0,
     creatures: [],
@@ -95,6 +95,27 @@ var GAME = {
         GAME.turns = 0;
     },
 
+    getDNACounts: function() {
+        return GAME.creatures.reduce(function(acc, creature) {
+            var counted = false;
+            var names = Object.getOwnPropertyNames(acc);
+            var myName = creature.dna.join(", ")
+
+            names.forEach(function(name) {
+                if (name === myName) {
+                    acc[name]++;
+                    counted = true;
+                }
+            });
+
+            if (!counted) {
+                acc[myName] = 1;
+            }
+
+            return acc;
+        }, {});
+    },
+
     redraw: function() {
         document.getElementById("game-turn").textContent = "Turn: " + GAME.turns;
 
@@ -111,6 +132,8 @@ var GAME = {
         }, 0) / GAME.creatures.length;
 
         document.getElementById("avg-size").textContent = "Average Size: " + avg_size.toFixed(2);
+
+        console.log(GAME.getDNACounts());
 
         for (var x = 0; x < 100; x++) {
             for (var y = 0; y < 100; y++) {
