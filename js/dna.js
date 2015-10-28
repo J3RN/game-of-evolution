@@ -92,13 +92,27 @@ var DNA = {
     },
 
     computeColor: function(dna) {
-        var max = 5 * DNA.length;
+        // Vector in radians
+        var unit = (2 * Math.PI) / DNA.length;
 
-        var option = dna.reduce(function(acc, x) {
-            return acc + x;
-        }, 0);
+        var coords = dna.reduce(function(acc, x, index) {
+            var myAngle = index * unit;
+            return [acc[0] + (x * Math.cos(myAngle)),   // X
+                    acc[1] + (x * Math.sin(myAngle))];  // Y
+        }, [0, 0]);
 
-        return Math.floor(360 * (option / max));
+        var angle = Math.atan(coords[1] / coords[0]);   // arctan(y / x)
+
+        if (coords[0] < 0) {           // Correct for 2nd and 3rd quadrants
+            angle += Math.PI;
+        }
+
+        if (angle < 0) {               // Correct for 4th quadrant
+            angle += 2 * Math.PI;
+        }
+
+        var degrees = Math.floor((angle / (2 * Math.PI)) * 360); // 2 PI = 360 degrees
+        return degrees;
     },
 }
 
