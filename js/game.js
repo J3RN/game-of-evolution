@@ -1,7 +1,7 @@
 'use strict';
 
 var GAME = {
-    num_indiv: 2000,
+    num_indiv: 5000,
     max_turns: 0,
     turns: 0,
     creatures: [],
