@@ -15,7 +15,7 @@ Check out a live running version [on my website](http:/j3rn.com/goe).
 - Individuals who do not eat after 25 turns (2.5 seconds) die of starvation.
 - Individuals have a maximum lifespan (10 seconds).
 - Individuals can eat any other individuals, in accordance with their DNA.
-- Individuals have a size (1 - 10, inclusive). Individuals can only eat other individuals that are smaller than them.
+- Individuals have a size (0 - 5, inclusive). Individuals can only eat other individuals that are smaller than them.
     - TODO: Hitpoints?
 
 ### Game
