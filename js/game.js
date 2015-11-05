@@ -5,6 +5,7 @@ var GAME = {
     max_turns: 0,
     turns: 0,
     creatures: [],
+    species: [],
 
     setup: function() {
         GAME.createBoard();
@@ -95,27 +96,6 @@ var GAME = {
         GAME.turns = 0;
     },
 
-    getDNACounts: function() {
-        return GAME.creatures.reduce(function(acc, creature) {
-            var counted = false;
-            var names = Object.getOwnPropertyNames(acc);
-            var myName = creature.dna.join(", ")
-
-            names.forEach(function(name) {
-                if (name === myName) {
-                    acc[name]++;
-                    counted = true;
-                }
-            });
-
-            if (!counted) {
-                acc[myName] = 1;
-            }
-
-            return acc;
-        }, {});
-    },
-
     redraw: function() {
         document.getElementById("game-turn").textContent = "Turn: " + GAME.turns;
 
@@ -133,7 +113,11 @@ var GAME = {
 
         document.getElementById("avg-size").textContent = "Average Size: " + avg_size.toFixed(2);
 
-        console.log(GAME.getDNACounts());
+        var topSpecies = GAME.topXSpecies(5);
+        for (var x = 1; x < 6; x++) {
+            document.getElementById("top" + x + "color").textContent = topSpecies[x - 1];
+            document.getElementById("top" + x + "count").textContent = GAME.species[topSpecies[x - 1]];
+        }
 
         for (var x = 0; x < 100; x++) {
             for (var y = 0; y < 100; y++) {
@@ -150,6 +134,18 @@ var GAME = {
                 }
             }
         }
+    },
+
+    topXSpecies: function(x) {
+        return GAME.nonDeadSpecies().sort(function(a, b) {
+            return GAME.species[b] - GAME.species[a];
+        }).slice(0, x);
+    },
+
+    nonDeadSpecies: function() {
+        return Object.keys(GAME.species).filter(function(name) {
+            return GAME.species[name] && GAME.species[name] !== 0;
+        });
     },
 
     gameIsOver: function() {
