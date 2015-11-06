@@ -1,7 +1,12 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
 html, body {
   padding: 0;
   margin: 0;
   text-align: center;
+  color: #282828;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
 }
 
 td {
@@ -20,22 +25,55 @@ canvas {
   position: fixed;
   top: 0;
   right: 0;
-  padding: 5px;
-  border: 1px solid black;
+  margin: 1em 1em 0 0;
+  padding: 2em 0;
+  -moz-box-shadow: 0 2px 5px 2px rgba(0,0,0,0.15);
+  -webkit-box-shadow: 0 2px 5px 2px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 5px 2px rgba(0,0,0,0.15);
 }
 
 button {
-  font-size: 1.5em;
-  padding: 5px;
-  margin-top: 15px;
+  font-size: 1em;
+  color: #FFF;
+  margin: 2em 0 0 0;
+  background: #FF3F3F;
+  padding: 0.25em 1.5em;
+  border-radius: 2px;
+  border: none;
+  box-shadow: none;
 }
 
 table {
-  width: 13em;
-  margin-top: 15px;
+  margin-top: 3em;
+  box-sizing: border-box;
+  width: 15em;
 }
 
 table, td {
   text-align: left;
-  border: 1px solid black;
+}
+
+td {
+  height: 1.5em;
+  line-height: 1.5em;
+  vertical-align: middle;
+  padding: 0 0.5em;
+  width: 50%;
+}
+
+thead td {
+    text-align: center;
+    width: 100%;
+}
+
+thead tr {
+  border-bottom: 2px solid #DBDBDB;
+}
+
+tr {
+  display: flex;
+}
+
+table, #control {
+  border-radius: 4px;
 }
