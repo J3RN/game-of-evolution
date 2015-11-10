@@ -16,12 +16,12 @@ function inspectCreature(mouseEvent) {
     if (item) {
         var description = DNA.describeDNA(item.dna);
 
-        Object.keys(description).forEach(function(item) {
-            document.getElementById(item).textContent = description[item];
-        });
-    } else {
-        Object.keys(DNA.describeDNA(GAME.creatures[0].dna)).forEach(function(item) {
-            document.getElementById(item).textContent = "";
-        });
+        element.title = Object.keys(description).reduce(function(acc, e) {
+            if (acc !== "") {
+                acc += "\n"
+            }
+
+            return acc + e + ": " + description[e];
+        }, "");
     }
 }
