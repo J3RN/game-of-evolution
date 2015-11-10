@@ -16,6 +16,7 @@ td {
 
 canvas {
   border: 1px solid black;
+  margin-top: 1vmin;
   height: 98vmin;
   width: 98vmin;
 }

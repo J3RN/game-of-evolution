@@ -64,6 +64,13 @@ var Creature = function(dna, loc) {
     this.direction = CREATURE.randomDirection();
     this.food = 0;
     this.dead = false;
+
+    // Update GAME.species counts
+    if (GAME.species[this.color] === undefined) {
+        GAME.species[this.color] = 1;
+    } else {
+        GAME.species[this.color] += 1;
+    }
 }
 
 Creature.prototype = {
@@ -147,7 +154,6 @@ Creature.prototype = {
         if (!this.dead) {
             this.age += 1;
 
-
             var behavior = this.behavior[this.getBefore()];
             switch(behavior) {
                 case this.actions.eat:
@@ -183,6 +189,10 @@ Creature.prototype = {
 
         if (creature && (creature.dead || this.size > creature.size)) {
             // Remove creature
+            if (!creature.dead) {
+                GAME.species[creature.color]--;
+            }
+
             delete GAME.board[creature.loc.x][creature.loc.y];
             delete GAME.creatures[GAME.creatures.indexOf(creature)];
 
@@ -264,5 +274,6 @@ Creature.prototype = {
 
     die: function() {
         this.dead = true;
+        GAME.species[this.color] -= 1;
     },
 }

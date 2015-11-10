@@ -5,6 +5,7 @@ var GAME = {
     max_turns: 0,
     turns: 0,
     creatures: [],
+    species: [],
 
     setup: function() {
         GAME.createBoard();
@@ -112,6 +113,21 @@ var GAME = {
 
         document.getElementById("avg-size").textContent = "Average Size: " + avg_size.toFixed(2);
 
+        var topSpecies = GAME.topXSpecies(5);
+        for (var x = 1; x < 6; x++) {
+            var color = topSpecies[x - 1];
+
+            document.getElementById("top" + x + "color").textContent = color;
+
+            if (color) {
+                document.getElementById("top" + x + "color").style.color = "hsl(" + color + ", 100%, 50%)";
+            } else {
+                document.getElementById("top" + x + "color").style.color = "none";
+            }
+
+            document.getElementById("top" + x + "count").textContent = GAME.species[color];
+        }
+
         for (var x = 0; x < 100; x++) {
             for (var y = 0; y < 100; y++) {
                 var creature = GAME.getItem(x, y);
@@ -127,6 +143,18 @@ var GAME = {
                 }
             }
         }
+    },
+
+    topXSpecies: function(x) {
+        return GAME.nonDeadSpecies().sort(function(a, b) {
+            return GAME.species[b] - GAME.species[a];
+        }).slice(0, x);
+    },
+
+    nonDeadSpecies: function() {
+        return Object.keys(GAME.species).filter(function(name) {
+            return GAME.species[name] && GAME.species[name] !== 0;
+        });
     },
 
     gameIsOver: function() {
