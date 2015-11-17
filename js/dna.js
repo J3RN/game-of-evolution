@@ -15,6 +15,8 @@ var DNA = {
 
     sameDNA: function(one, two) {
         var allSame = true;
+        one = one.slice(1);
+        two = two.slice(1);
 
         one.forEach(function(x, i) {
             if (x !== two[i]) {
@@ -93,9 +95,9 @@ var DNA = {
 
     computeColor: function(dna) {
         // Vector in radians
-        var unit = (2 * Math.PI) / DNA.length;
+        var unit = (2 * Math.PI) / (DNA.length - 1);
 
-        var coords = dna.reduce(function(acc, x, index) {
+        var coords = dna.slice(1).reduce(function(acc, x, index) {
             var myAngle = index * unit;
             return [acc[0] + (x * Math.cos(myAngle)),   // X
                     acc[1] + (x * Math.sin(myAngle))];  // Y
