@@ -14,11 +14,11 @@ function createNoise(freq) {
 }
 
 function createEatNoise() {
-    return createNoise(2000);
+    return createNoise(3000);
 }
 
 function createReproduceNoise() {
-    return createNoise(3000);
+    return createNoise(4000);
 }
 
 var CREATURE = {
