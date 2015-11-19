@@ -1,8 +1,33 @@
 'use strict';
 
+function createNoise(freq) {
+    var rate = 44100;  // Sample rate (samples per second)
+    var data = [];
+
+    for (var i = 0; i < 250; i++) {
+        var time = i / rate;
+        data[i] = 128 + Math.round(127 * (Math.sin(2 * Math.PI * freq * time)));
+    }
+
+    var wave = new RIFFWAVE(data);
+    return new Audio(wave.dataURI);
+}
+
+function createEatNoise() {
+    return createNoise(2000);
+}
+
+function createReproduceNoise() {
+    return createNoise(3000);
+}
+
 var CREATURE = {
     max_lifespan: 100,
     max_time_without_food: 25,
+
+    eatNoise: createEatNoise(),
+
+    reproduceNoise: createReproduceNoise(),
 
     randomDirection: function() {
         return Math.floor(Math.random() * 4);
@@ -197,6 +222,9 @@ Creature.prototype = {
             delete GAME.creatures[GAME.creatures.indexOf(creature)];
 
             this.food += creature.food + 1;
+
+            // Play appropriate noise
+            CREATURE.eatNoise.play();
         }
     },
 
@@ -218,6 +246,8 @@ Creature.prototype = {
 
                 GAME.board[childLocation.x][childLocation.y] = child;
                 GAME.creatures.push(child);
+
+                CREATURE.reproduceNoise.play();
             }
         }
     },
