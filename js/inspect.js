@@ -3,7 +3,7 @@
 function inspectCreature(mouseEvent) {
     var element = document.getElementsByTagName("canvas")[0];
 
-    var boardSide = GAME.board.length; // Assumes square
+    var boardSide = GAME.board.width; // Assumes square
 
     var xPercent = mouseEvent.offsetX / element.offsetWidth;
     var yPercent = mouseEvent.offsetY / element.offsetWidth;
@@ -11,7 +11,7 @@ function inspectCreature(mouseEvent) {
     var boardX = Math.floor(xPercent * boardSide);
     var boardY = Math.floor(yPercent * boardSide);
 
-    var item = GAME.getItem(boardX, boardY);
+    var item = GAME.board.getItem({x: boardX, y: boardY});
 
     if (item) {
         var description = DNA.describeDNA(item.dna);

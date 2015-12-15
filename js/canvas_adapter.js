@@ -1,17 +1,16 @@
-var ADAPTER = {
-    HEIGHT: 200,
-    WIDTH: 200,
+var CanvasAdapter = function(board) {
+    var canvas = document.getElementById('canvas');
 
-    load: function() {
-        var canvas = document.getElementById('canvas');
-        ADAPTER.ctx = canvas.getContext('2d');
-    },
+    this.ctx = canvas.getContext('2d');
+    this.board = board;
+}
 
+CanvasAdapter.prototype = {
     setCell: function(x, y, hsl) {
-        var width = 500 / this.WIDTH;
-        var height = 500 / this.HEIGHT;
+        var width = 500 / this.board.width;
+        var height = 500 / this.board.height;
 
-        ADAPTER.ctx.fillStyle = 'hsl(' + hsl.join(',') + ')';
-        ADAPTER.ctx.fillRect(x * width, y * height, width, height);
+        this.ctx.fillStyle = 'hsl(' + hsl.join(',') + ')';
+        this.ctx.fillRect(x * width, y * height, width, height);
     }
 };

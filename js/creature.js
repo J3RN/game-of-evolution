@@ -24,7 +24,7 @@ var CREATURE = {
         });
 
         var locs = possibleLocs.filter(function(loc) {
-            if (GAME.getItem(loc.x, loc.y) || GAME.isOutOfBounds(loc)) {
+            if (GAME.board.getItem(loc) || GAME.board.isOutOfBounds(loc)) {
                 return false;
             } else {
                 return true;
@@ -107,8 +107,8 @@ Creature.prototype = {
 
         if ((dir === this.directions.up && y === 0) ||
                 (dir === this.directions.left && x === 0) ||
-                (dir === this.directions.down && y === ADAPTER.HEIGHT - 1) ||
-                (dir === this.directions.right && x === ADAPTER.WIDTH - 1)) {
+                (dir === this.directions.down && y === GAME.board.height - 1) ||
+                (dir === this.directions.right && x === GAME.board.width - 1)) {
             return this.entities.wall;
         } else {
             var target = this.getCreatureBefore();
@@ -136,16 +136,16 @@ Creature.prototype = {
     getCreatureBefore: function() {
         switch(this.direction) {
             case this.directions.up:
-                return GAME.getItem(this.loc.x, this.loc.y - 1);
+                return GAME.board.getItem({x: this.loc.x, y: this.loc.y - 1});
                 break;
             case this.directions.right:
-                return GAME.getItem(this.loc.x + 1, this.loc.y);
+                return GAME.board.getItem({x: this.loc.x + 1, y: this.loc.y});
                 break;
             case this.directions.down:
-                return GAME.getItem(this.loc.x, this.loc.y + 1);
+                return GAME.board.getItem({x: this.loc.x, y: this.loc.y + 1});
                 break;
             case this.directions.left:
-                return GAME.getItem(this.loc.x - 1, this.loc.y);
+                return GAME.board.getItem({x: this.loc.x - 1, y: this.loc.y});
                 break;
         }
     },
@@ -188,14 +188,7 @@ Creature.prototype = {
         var creature = this.getCreatureBefore();
 
         if (creature && (creature.dead || this.size > creature.size)) {
-            // Remove creature
-            if (!creature.dead) {
-                GAME.species[creature.color]--;
-            }
-
-            delete GAME.board[creature.loc.x][creature.loc.y];
-            delete GAME.creatures[GAME.creatures.indexOf(creature)];
-
+            GAME.removeCreature(creature);
             this.food += creature.food + 1;
         }
     },
@@ -211,13 +204,13 @@ Creature.prototype = {
                 // Subtract one for new creature
                 this.food--;
 
-                // Split food evenly among parent and child
+                // Split food evenly among parent and child,
+                // remainder goes to child
                 var rem = this.food % 2;
                 child.food = Math.floor(this.food / 2) + rem;
                 this.food = Math.floor(this.food / 2);
 
-                GAME.board[childLocation.x][childLocation.y] = child;
-                GAME.creatures.push(child);
+                GAME.addCreature(child);
             }
         }
     },
@@ -260,7 +253,8 @@ Creature.prototype = {
             }
 
             var newLoc = { x: this.loc.x, y: this.loc.y };
-            GAME.moveItem(oldLoc, newLoc);
+
+            GAME.board.moveCreature(this, oldLoc, newLoc);
         }
     },
 
@@ -274,6 +268,9 @@ Creature.prototype = {
 
     die: function() {
         this.dead = true;
+
+        // This needs to be moved
         GAME.species[this.color] -= 1;
+        GAME.board.changed.push(this.loc);
     },
 }

@@ -6,24 +6,14 @@ var GAME = {
     turns: 0,
     creatures: [],
     species: [],
-    domAdapter: undefined, // is loaded in setup
+    domAdapter: undefined,  // loaded in setup
+    canvasAdapter: undefined,
 
     setup: function() {
-        this.domAdapter = new DomAdapter();
-        GAME.createBoard();
+        this.domAdapter =       new DomAdapter();
+        this.board =            new Board();
+
         GAME.createInitialCreatures();
-    },
-
-    createBoard: function() {
-        GAME.board = [];
-
-        for (var i = 0; i < ADAPTER.WIDTH; i++) {
-            GAME.board[i] = [];
-
-            for (var j = 0; j < ADAPTER.HEIGHT; j++) {
-                GAME.board[i][j] = undefined;
-            }
-        }
     },
 
     createInitialCreatures: function() {
@@ -31,16 +21,10 @@ var GAME = {
 
         for (var j = 0; j < num_indiv; j++) {
             var dna = DNA.generateDNA();
-            var randomLoc = GAME.randomLocation();
-
-            while (GAME.getItem(randomLoc.x, randomLoc.y)) {
-                randomLoc = GAME.randomLocation();
-            }
-
+            var randomLoc = this.board.randomEmptyLocation();
             var newCreature = new Creature(dna, randomLoc);
 
-            GAME.creatures.push(newCreature);
-            GAME.board[randomLoc.x][randomLoc.y] = newCreature;
+            this.addCreature(newCreature);
         }
 
         GAME.redraw();
@@ -71,20 +55,7 @@ var GAME = {
     resetGame: function() {
         var i;
 
-        // Delete all remaining creatures
-        for (var x = 0; x < ADAPTER.WIDTH; x++) {
-            for (var y = 0; y < ADAPTER.HEIGHT; y++) {
-                if (GAME.board[x][y]) {
-                    delete GAME.board[x][y];
-                }
-            }
-        }
-
-        // Delete all remaining creatures?
-        for (i = 0; i < GAME.creatures.length; i++) {
-            delete GAME.creatures[i];
-        }
-
+        GAME.board.clear();
         GAME.creatures = [];
 
         // Update max turns if necessary
@@ -111,6 +82,18 @@ var GAME = {
         return totalSize / GAME.creatures.length;
     },
 
+    topXSpecies: function(x) {
+        return GAME.nonDeadSpecies().sort(function(a, b) {
+            return GAME.species[b] - GAME.species[a];
+        }).slice(0, x);
+    },
+
+    nonDeadSpecies: function() {
+        return Object.keys(GAME.species).filter(function(name) {
+            return GAME.species[name] && GAME.species[name] !== 0;
+        });
+    },
+
     redraw: function() {
         this.domAdapter.updateTurnCounter(GAME.turns);
 
@@ -125,86 +108,30 @@ var GAME = {
         this.domAdapter.updateAvgSizeIndicator(this.getAvgSize());
         this.domAdapter.updateTopSpeciesList(GAME.topXSpecies(5));
 
-        // Err... n^2
-        for (var x = 0; x < ADAPTER.HEIGHT; x++) {
-            for (var y = 0; y < ADAPTER.WIDTH; y++) {
-                var creature = GAME.getItem(x, y);
-
-                if (creature) {
-                    if (creature.dead) {
-                        ADAPTER.setCell(x, y, [creature.color, "75%", "30%"]);
-                    } else {
-                        ADAPTER.setCell(x, y, [creature.color, "100%", "50%"]);
-                    }
-                } else {
-                    ADAPTER.setCell(x, y, [0, "100%", "100%"]);
-                }
-            }
-        }
-    },
-
-    topXSpecies: function(x) {
-        return GAME.nonDeadSpecies().sort(function(a, b) {
-            return GAME.species[b] - GAME.species[a];
-        }).slice(0, x);
-    },
-
-    nonDeadSpecies: function() {
-        return Object.keys(GAME.species).filter(function(name) {
-            return GAME.species[name] && GAME.species[name] !== 0;
-        });
+        this.board.redraw();
     },
 
     gameIsOver: function() {
-        var allDead = true;
-        var allEmpty = true;
-
-        for (var x = 0; x < ADAPTER.WIDTH; x++) {
-            for (var y = 0; y < ADAPTER.HEIGHT; y++) {
-                var item = GAME.getItem(x, y)
-
-                if (item) {
-                    allEmpty = false;
-
-                    if (!item.dead) {
-                        allDead = false;
-                    }
-                }
-            }
-        }
-
-        return allDead || allEmpty;
-    },
-
-    randomLocation: function() {
-        return {
-            x: Math.floor(Math.random() * ADAPTER.WIDTH),
-            y: Math.floor(Math.random() * ADAPTER.HEIGHT)
-        };
-    },
-
-    isOutOfBounds: function(loc) {
-        if (loc.x >= 0 && loc.x < ADAPTER.WIDTH &&
-                loc.y >= 0 && loc.y < ADAPTER.HEIGHT) {
-            return false;
-        } else {
+        if (GAME.getAliveCount() === 0) {
             return true;
         }
+
+        return false;
     },
 
-    getItem: function(x, y) {
-        if (GAME.isOutOfBounds({ x: x, y: y })) {
-            return undefined;
-        } else {
-            return GAME.board[x][y];
+    addCreature: function(newCreature) {
+        this.creatures.push(newCreature);
+        this.board.addCreature(newCreature);
+    },
+
+    removeCreature: function(creature) {
+        if (!creature.dead) {
+            this.species[creature.color]--;
         }
-    },
 
-    moveItem: function(oldLoc, newLoc) {
-        GAME.board[newLoc.x][newLoc.y] = GAME.getItem(oldLoc.x, oldLoc.y);
-        GAME.board[oldLoc.x][oldLoc.y] = undefined;
-    },
-
+        delete this.creatures[this.creatures.indexOf(creature)];
+        this.board.removeCreature(creature.loc);
+    }
 };
 
 
@@ -215,7 +142,6 @@ var GAME = {
         } else {
             var reset = document.getElementById("reset");
             reset.onclick = GAME.resetGame;
-            ADAPTER.load();
             GAME.setup();
             setInterval(GAME.gameLoop, 100);
         }
