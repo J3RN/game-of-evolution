@@ -6,8 +6,10 @@ var GAME = {
     turns: 0,
     creatures: [],
     species: [],
+    domAdapter: undefined, // is loaded in setup
 
     setup: function() {
+        this.domAdapter = new DomAdapter();
         GAME.createBoard();
         GAME.createInitialCreatures();
     },
@@ -96,38 +98,34 @@ var GAME = {
         GAME.turns = 0;
     },
 
-    redraw: function() {
-        document.getElementById("game-turn").textContent = "Turn: " + GAME.turns;
-
-        var total = GAME.creatures.length;
-        var alive = GAME.creatures.filter(function(x) {
+    getAliveCount: function() {
+        return GAME.creatures.filter(function(x) {
             return !x.dead;
         }).length;
-        document.getElementById("creature-count").textContent = total;
-        document.getElementById("alive").textContent = alive;
-        document.getElementById("dead").textContent = total - alive;
+    },
 
-        var avg_size = GAME.creatures.reduce(function(acc, item) {
+    getAvgSize: function() {
+        var totalSize = GAME.creatures.reduce(function(acc, item) {
             return acc + item.size;
-        }, 0) / GAME.creatures.length;
+        }, 0);
+        return totalSize / GAME.creatures.length;
+    },
 
-        document.getElementById("avg-size").textContent = "Average Size: " + avg_size.toFixed(2);
+    redraw: function() {
+        this.domAdapter.updateTurnCounter(GAME.turns);
 
-        var topSpecies = GAME.topXSpecies(5);
-        for (var x = 1; x < 6; x++) {
-            var color = topSpecies[x - 1];
+        var total = GAME.creatures.length;
+        var alive = GAME.getAliveCount();
+        var dead = total - alive;
 
-            document.getElementById("top" + x + "color").textContent = color;
+        this.domAdapter.updateCreatureCount(total);
+        this.domAdapter.updateAliveCount(alive);
+        this.domAdapter.updateDeadCount(dead);
 
-            if (color) {
-                document.getElementById("top" + x + "color").style.color = "hsl(" + color + ", 100%, 50%)";
-            } else {
-                document.getElementById("top" + x + "color").style.color = "none";
-            }
+        this.domAdapter.updateAvgSizeIndicator(this.getAvgSize());
+        this.domAdapter.updateTopSpeciesList(GAME.topXSpecies(5));
 
-            document.getElementById("top" + x + "count").textContent = GAME.species[color];
-        }
-
+        // Err... n^2
         for (var x = 0; x < ADAPTER.HEIGHT; x++) {
             for (var y = 0; y < ADAPTER.WIDTH; y++) {
                 var creature = GAME.getItem(x, y);
