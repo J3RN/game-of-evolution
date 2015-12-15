@@ -107,8 +107,8 @@ Creature.prototype = {
 
         if ((dir === this.directions.up && y === 0) ||
                 (dir === this.directions.left && x === 0) ||
-                (dir === this.directions.down && y === 99) ||
-                (dir === this.directions.right && x === 99)) {
+                (dir === this.directions.down && y === ADAPTER.HEIGHT - 1) ||
+                (dir === this.directions.right && x === ADAPTER.WIDTH - 1)) {
             return this.entities.wall;
         } else {
             var target = this.getCreatureBefore();

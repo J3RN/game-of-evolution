@@ -15,10 +15,10 @@ var GAME = {
     createBoard: function() {
         GAME.board = [];
 
-        for (var i = 0; i < 100; i++) {
+        for (var i = 0; i < ADAPTER.WIDTH; i++) {
             GAME.board[i] = [];
 
-            for (var j = 0; j < 100; j++) {
+            for (var j = 0; j < ADAPTER.HEIGHT; j++) {
                 GAME.board[i][j] = undefined;
             }
         }
@@ -70,8 +70,8 @@ var GAME = {
         var i;
 
         // Delete all remaining creatures
-        for (var x = 0; x < 100; x++) {
-            for (var y = 0; y < 100; y++) {
+        for (var x = 0; x < ADAPTER.WIDTH; x++) {
+            for (var y = 0; y < ADAPTER.HEIGHT; y++) {
                 if (GAME.board[x][y]) {
                     delete GAME.board[x][y];
                 }
@@ -128,8 +128,8 @@ var GAME = {
             document.getElementById("top" + x + "count").textContent = GAME.species[color];
         }
 
-        for (var x = 0; x < 100; x++) {
-            for (var y = 0; y < 100; y++) {
+        for (var x = 0; x < ADAPTER.HEIGHT; x++) {
+            for (var y = 0; y < ADAPTER.WIDTH; y++) {
                 var creature = GAME.getItem(x, y);
 
                 if (creature) {
@@ -161,8 +161,8 @@ var GAME = {
         var allDead = true;
         var allEmpty = true;
 
-        for (var x = 0; x < 100; x++) {
-            for (var y = 0; y < 100; y++) {
+        for (var x = 0; x < ADAPTER.WIDTH; x++) {
+            for (var y = 0; y < ADAPTER.HEIGHT; y++) {
                 var item = GAME.getItem(x, y)
 
                 if (item) {
@@ -180,16 +180,17 @@ var GAME = {
 
     randomLocation: function() {
         return {
-            x: Math.floor(Math.random() * 100),
-            y: Math.floor(Math.random() * 100)
+            x: Math.floor(Math.random() * ADAPTER.WIDTH),
+            y: Math.floor(Math.random() * ADAPTER.HEIGHT)
         };
     },
 
     isOutOfBounds: function(loc) {
-        if (loc.x < 0 || loc.x > 99 || loc.y < 0 || loc.y > 99) {
-            return true;
-        } else {
+        if (loc.x >= 0 && loc.x < ADAPTER.WIDTH &&
+                loc.y >= 0 && loc.y < ADAPTER.HEIGHT) {
             return false;
+        } else {
+            return true;
         }
     },
 
