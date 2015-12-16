@@ -1,3 +1,5 @@
+'use strict';
+
 var Board = function() {
     this.changed = [];
     this.board = [];
@@ -68,7 +70,7 @@ Board.prototype = {
     clear: function() {
         for (var x = 0; x < this.width; x++) {
             for (var y = 0; y < this.height; y++) {
-                loc = {x: x, y: y};
+                var loc = {x: x, y: y};
 
                 if (this.getItem(loc)) {
                     delete this.board[x][y];

@@ -1,3 +1,4 @@
+'use strict';
 // DomAdapter object retains state, allowing us to update elements repeatedly
 // without querying for them each time
 
