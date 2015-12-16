@@ -90,14 +90,14 @@ Creature.prototype = {
         dead_enemy: 5,
     },
 
-    actions: {
-        eat: 0,
-        mate: 1,
-        turn_left: 2,
-        turn_right: 3,
-        move: 4,
-        turn_around: 5,
-    },
+    actions: [
+        "eat",
+        "mate",
+        "turn_left",
+        "turn_right",
+        "move",
+        "turn_around",
+    ],
 
     getBefore: function() {
         var x = this.loc.x;
@@ -155,26 +155,8 @@ Creature.prototype = {
             this.age += 1;
 
             var behavior = this.behavior[this.getBefore()];
-            switch(behavior) {
-                case this.actions.eat:
-                    this.eat();
-                    break;
-                case this.actions.mate:
-                    this.mate();
-                    break;
-                case this.actions.turn_left:
-                    this.turn_left();
-                    break;
-                case this.actions.turn_right:
-                    this.turn_right();
-                    break;
-                case this.actions.move:
-                    this.move();
-                    break;
-                case this.actions.turn_around:
-                    this.turn_around();
-                    break;
-            }
+            var action = this.actions[behavior];
+            this[action]();
 
             // No food or too old? Die
             if ((this.age % CREATURE.max_time_without_food === 0 && this.food === 0) ||
