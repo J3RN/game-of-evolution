@@ -13,7 +13,7 @@ var DomAdapter = function() {
 
 DomAdapter.prototype = {
     updateTurnCounter: function(turns) {
-        this.turnCounter.textContent = "Turn: " + GAME.turns;
+        this.turnCounter.textContent = GAME.turns;
     },
     updateCreatureCount: function(count) {
         this.creatureCounter.textContent = count;
@@ -25,7 +25,7 @@ DomAdapter.prototype = {
         this.deadCounter.textContent = dead;
     },
     updateAvgSizeIndicator: function(avgSize) {
-        this.avgSizeIndicator.textContent = "Average Size: " + avgSize.toFixed(2);
+        this.avgSizeIndicator.textContent = avgSize.toFixed(2);
     },
     updateTopSpeciesList: function(topSpecies) {
         for (var x = 1; x < 6; x++) {
