@@ -1,11 +1,16 @@
-var ADAPTER = {
-    load: function() {
-        var canvas = document.getElementById('canvas');
-        ADAPTER.ctx = canvas.getContext('2d');
-    },
+var CanvasAdapter = function(board) {
+    var canvas = document.getElementById('canvas');
 
+    this.ctx = canvas.getContext('2d');
+    this.board = board;
+}
+
+CanvasAdapter.prototype = {
     setCell: function(x, y, hsl) {
-        ADAPTER.ctx.fillStyle = 'hsl(' + hsl.join(',') + ')';
-        ADAPTER.ctx.fillRect(x * 5, y * 5, 5, 5);
+        var width = 500 / this.board.width;
+        var height = 500 / this.board.height;
+
+        this.ctx.fillStyle = 'hsl(' + hsl.join(',') + ')';
+        this.ctx.fillRect(x * width, y * height, width, height);
     }
 };
