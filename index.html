@@ -20,11 +20,17 @@
     <canvas width=500 height=500 id='canvas' onmousemove="inspectCreature(event);"></canvas>
 
     <div id="control">
-      <div id="game-turn">Turn: 0</div>
-      <div id="max-time">Max turns: 0</div>
-      <div id="avg-size">Average Size: 0</div>
+      <table class="col-third">
+        <thead>
+          <tr><td>Games</td></tr>
+        </thead>
+        <tbody>
+          <tr><td>Turn</td><td id="game-turn">0</td></tr>
+          <tr><td>Most turns</td><td id="max-time">0</td></tr>
+        </tbody>
+      </table>
 
-      <table>
+      <table class="col-third">
         <thead>
           <tr><td>Creatures</td></tr>
         </thead>
@@ -32,10 +38,11 @@
           <tr><td>Alive</td><td id="alive"></td></tr>
           <tr><td>Dead</td><td id="dead"></td></tr>
           <tr><td>Total</td><td id="creature-count"></td></tr>
+          <tr><td>Average Size</td><td id="avg-size">0</td></tr>
         </tbody>
       </table>
 
-      <table>
+      <table class="col-third">
         <thead>
           <tr><td>Most Successful Colors</td></tr>
         </thead>
@@ -48,6 +55,6 @@
         </tbody>
       </table>
       <button id="reset">Reset</button>
-    </div><!-- control -->
+    </div>
   </body>
 </html>

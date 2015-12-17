@@ -61,7 +61,7 @@ var GAME = {
         // Update max turns if necessary
         if (GAME.turns > GAME.max_turns) {
             GAME.max_turns = GAME.turns;
-            document.getElementById("max-time").textContent = "Max turns: " + GAME.max_turns;
+            document.getElementById("max-time").textContent = GAME.max_turns;
         }
 
         // Create new creatures, restart game timer
