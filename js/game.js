@@ -1,8 +1,8 @@
 'use strict';
 
 var GAME = {
-    numIndiv: 5000,
-    maxTurns: 0,
+    num_food: 5000,
+    max_turns: 0,
     turns: 0,
     game: 1,
     creatures: [],
@@ -14,21 +14,18 @@ var GAME = {
         this.board =            new Board();
         this.domAdapter =       new DomAdapter();
 
-        GAME.createInitialCreatures();
+        GAME.createInitialCreature();
     },
 
-    createInitialCreatures: function() {
-        var numIndiv = GAME.numIndiv;
+    createInitialCreature: function() {
+	var dna = DNA.generateDNA();
+	var randomLoc = this.board.randomEmptyLocation();
+	var newCreature = new Creature(dna, randomLoc);
+	newCreature.food = GAME.num_food
 
-        for (var j = 0; j < numIndiv; j++) {
-            var dna = DNA.generateDNA();
-            var randomLoc = this.board.randomEmptyLocation();
-            var newCreature = new Creature(dna, randomLoc);
+	this.addCreature(newCreature);
 
-            this.addCreature(newCreature);
-        }
-
-        GAME.redraw();
+	GAME.redraw();
     },
 
     gameLoop: function() {
@@ -69,7 +66,7 @@ var GAME = {
         this.domAdapter.updateGameCount(GAME.game);
 
         // Create new creatures, restart game timer
-        GAME.createInitialCreatures();
+        GAME.createInitialCreature();
         GAME.turns = 0;
     },
 
