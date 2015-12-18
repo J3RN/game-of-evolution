@@ -1,7 +1,7 @@
 'use strict';
 
 var GAME = {
-    num_food: 5000,
+    numFood: 5000,
     max_turns: 0,
     turns: 0,
     game: 1,
@@ -18,12 +18,29 @@ var GAME = {
     },
 
     createInitialCreature: function() {
-	var dna = DNA.generateDNA();
-	var randomLoc = this.board.randomEmptyLocation();
-	var newCreature = new Creature(dna, randomLoc);
-	newCreature.food = GAME.num_food
+        var fakeDNA = new Array(DNA.length);
 
-	this.addCreature(newCreature);
+        // numBehavior is out-of-bounds for normal DNA. This DNA is guaranteed
+        // not to match any naturally birthed creature.
+        for (var i = 0; i < DNA.length; i++) {
+            fakeDNA[i] = DNA.numBehavior;
+        }
+
+        // Generate fake, dead creatures
+        for (var j = 0; j < this.numFood; j++) {
+            var randomLoc = this.board.randomEmptyLocation();
+            var newCreature = new Creature(fakeDNA, randomLoc);
+            newCreature.dead = true;
+
+            this.board.addCreature(newCreature);
+        }
+
+        // Generate real creature
+        var dna = DNA.generateDNA();
+        var randomLoc = this.board.randomEmptyLocation();
+        var newCreature = new Creature(dna, randomLoc);
+
+        this.addCreature(newCreature);
 
 	GAME.redraw();
     },
