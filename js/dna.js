@@ -2,6 +2,7 @@
 
 var DNA = {
     length: 7,
+    numBehavior: 6,
 
     generateDNA: function() {
         var dna = [];
@@ -64,7 +65,7 @@ var DNA = {
     },
 
     randomBehavior: function() {
-        return Math.floor(Math.random() * 6);
+        return Math.floor(Math.random() * this.numBehavior);
     },
 
     describeDNA: function(dna) {
