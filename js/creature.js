@@ -64,13 +64,6 @@ var Creature = function(dna, loc) {
     this.direction = CREATURE.randomDirection();
     this.food = 0;
     this.dead = false;
-
-    // Update GAME.species counts
-    if (GAME.species[this.color] === undefined) {
-        GAME.species[this.color] = 1;
-    } else {
-        GAME.species[this.color] += 1;
-    }
 }
 
 Creature.prototype = {

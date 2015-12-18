@@ -123,6 +123,13 @@ var GAME = {
     addCreature: function(newCreature) {
         this.creatures.push(newCreature);
         this.board.addCreature(newCreature);
+
+        // Update GAME.species count
+        if (GAME.species[newCreature.color] === undefined) {
+            GAME.species[newCreature.color] = 1;
+        } else {
+            GAME.species[newCreature.color] += 1;
+        }
     },
 
     removeCreature: function(creature) {
