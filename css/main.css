@@ -13,12 +13,16 @@ td {
 	width: 50%;
 }
 
-
-canvas {
+canvas#canvas {
   border: 1px solid black;
   margin-top: 1vmin;
   height: 98vmin;
   width: 98vmin;
+}
+
+#inspect {
+  background: white;
+  border: 1px solid black;
 }
 
 #control {

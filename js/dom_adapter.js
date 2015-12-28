@@ -3,13 +3,21 @@
 // without querying for them each time
 
 var DomAdapter = function() {
-    this.turnCounter =          document.getElementById('game-turn');
-    this.creatureCounter =      document.getElementById('creature-count');
-    this.aliveCounter =         document.getElementById('alive');
-    this.deadCounter =          document.getElementById('dead');
-    this.avgSizeIndicator =     document.getElementById('avg-size');
-    this.maxTurnsCounter =      document.getElementById('max-time');
-    this.gameCounter =          document.getElementById('game-count');
+    this.turnCounter            = document.getElementById('game-turn');
+    this.creatureCounter        = document.getElementById('creature-count');
+    this.aliveCounter           = document.getElementById('alive');
+    this.deadCounter            = document.getElementById('dead');
+    this.avgSizeIndicator       = document.getElementById('avg-size');
+    this.maxTurnsCounter        = document.getElementById('max-time');
+    this.gameCounter            = document.getElementById('game-count');
+    this.canvas                 = document.getElementById('canvas');
+    this.inspectElement         = document.getElementById('inspect');
+
+    // Inspect listener
+    var domAdapter = this;
+    this.canvas.onclick = function(mouseEvent) {
+        domAdapter.inspect(mouseEvent);
+    };
 }
 
 DomAdapter.prototype = {
@@ -49,4 +57,35 @@ DomAdapter.prototype = {
     updateMaxTurnsCount: function(turns) {
         this.maxTurnsCounter.textContent = "Max Turns: " + turns;
     },
+    inspect: function(mouseEvent) {
+        var boardSide = GAME.board.width; // Assumes square
+
+        var xPercent = mouseEvent.offsetX / this.canvas.offsetWidth;
+        var yPercent = mouseEvent.offsetY / this.canvas.offsetWidth;
+
+        var boardX = Math.floor(xPercent * boardSide);
+        var boardY = Math.floor(yPercent * boardSide);
+
+        var item = GAME.board.getItem({x: boardX, y: boardY});
+
+        if (item) {
+            var description = DNA.describeDNA(item.dna);
+
+            this.inspectElement.innerHTML = Object.keys(description).reduce(function(acc, e) {
+                if (acc !== "") {
+                    acc += "<br />"
+                }
+
+                return acc + e + ": " + description[e];
+            }, "");
+
+            // Position and show
+            this.inspectElement.style.display = 'block';
+            this.inspectElement.style.position = 'fixed';
+            this.inspectElement.style.top = mouseEvent.offsetY + 'px';
+            this.inspectElement.style.left = mouseEvent.offsetX + 'px';
+        } else {
+            this.inspectElement.style.display = 'none';
+        }
+    }
 };
