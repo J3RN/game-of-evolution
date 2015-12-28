@@ -15,7 +15,7 @@ var DomAdapter = function() {
 
     // Inspect listener
     var domAdapter = this;
-    this.canvas.onclick = function(mouseEvent) {
+    document.onclick = function(mouseEvent) {
         domAdapter.inspect(mouseEvent);
     };
 }
@@ -71,13 +71,11 @@ DomAdapter.prototype = {
         if (item) {
             var description = DNA.describeDNA(item.dna);
 
-            this.inspectElement.innerHTML = Object.keys(description).reduce(function(acc, e) {
-                if (acc !== "") {
-                    acc += "<br />"
-                }
-
-                return acc + e + ": " + description[e];
-            }, "");
+            var table = "<table><tbody>";
+            Object.keys(description).forEach(function(e) {
+                table += "<tr><td>" + e + "</td><td>" + description[e] + "</td></tr>";
+            });
+            this.inspectElement.innerHTML = table + "</tbody></table>";
 
             // Position and show
             this.inspectElement.style.display = 'block';
