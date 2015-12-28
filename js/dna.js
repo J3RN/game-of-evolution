@@ -28,39 +28,39 @@ var DNA = {
     },
 
     mergeDNA: function(indiv1, indiv2) {
-        var dna_length = indiv1.dna.length;
-        var new_dna = [];
+        var dnaLength = indiv1.dna.length;
+        var newDna = [];
 
-        for (var i = 0; i < dna_length; i++) {
+        for (var i = 0; i < dnaLength; i++) {
             if (Math.random() > 0.5) {
-                new_dna.push(indiv1.dna[i]);
+                newDna.push(indiv1.dna[i]);
             } else {
-                new_dna.push(indiv2.dna[i]);
+                newDna.push(indiv2.dna[i]);
             }
         }
 
         // 1% chance of mutation
         if (Math.random() <= 0.01) {
             var index = Math.floor(Math.random() * 6) + 2;
-            new_dna[index] = DNA.randomBehavior();
+            newDna[index] = DNA.randomBehavior();
         }
 
-        return new_dna;
+        return newDna;
     },
 
     copyDNA: function(dna) {
-        var new_dna = [];
+        var newDna = [];
 
         dna.forEach(function(gene) {
-            new_dna.push(gene)
+            newDna.push(gene)
         });
 
         if (Math.random() <= 0.01) {
             var index = Math.floor(Math.random() * 6) + 2;
-            new_dna[index] = DNA.randomBehavior();
+            newDna[index] = DNA.randomBehavior();
         }
 
-        return new_dna;
+        return newDna;
     },
 
     randomBehavior: function() {
