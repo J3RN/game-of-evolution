@@ -4,6 +4,7 @@ var GAME = {
     num_indiv: 5000,
     max_turns: 0,
     turns: 0,
+    game: 1,
     creatures: [],
     species: [],
     domAdapter: undefined,  // loaded in setup
@@ -63,6 +64,9 @@ var GAME = {
             GAME.max_turns = GAME.turns;
             document.getElementById("max-time").textContent = "Max turns: " + GAME.max_turns;
         }
+
+        GAME.game++;
+        this.domAdapter.updateGameCount(GAME.game);
 
         // Create new creatures, restart game timer
         GAME.createInitialCreatures();

@@ -9,6 +9,7 @@ var DomAdapter = function() {
     this.deadCounter =          document.getElementById('dead');
     this.avgSizeIndicator =     document.getElementById('avg-size');
     this.maxTurnsCounter =      document.getElementById('max-time');
+    this.gameCounter =          document.getElementById('game-count');
 }
 
 DomAdapter.prototype = {
@@ -42,5 +43,7 @@ DomAdapter.prototype = {
             document.getElementById("top" + x + "count").textContent = GAME.species[color];
         }
     },
-
+    updateGameCount: function(count) {
+        this.gameCounter.textContent = "Game #" + count;
+    },
 };
