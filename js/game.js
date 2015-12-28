@@ -1,8 +1,8 @@
 'use strict';
 
 var GAME = {
-    num_indiv: 5000,
-    max_turns: 0,
+    numIndiv: 5000,
+    maxTurns: 0,
     turns: 0,
     game: 1,
     creatures: [],
@@ -18,9 +18,9 @@ var GAME = {
     },
 
     createInitialCreatures: function() {
-        var num_indiv = GAME.num_indiv;
+        var numIndiv = GAME.numIndiv;
 
-        for (var j = 0; j < num_indiv; j++) {
+        for (var j = 0; j < numIndiv; j++) {
             var dna = DNA.generateDNA();
             var randomLoc = this.board.randomEmptyLocation();
             var newCreature = new Creature(dna, randomLoc);
@@ -60,9 +60,9 @@ var GAME = {
         GAME.creatures = [];
 
         // Update max turns if necessary
-        if (GAME.turns > GAME.max_turns) {
-            GAME.max_turns = GAME.turns;
-            document.getElementById("max-time").textContent = "Max turns: " + GAME.max_turns;
+        if (GAME.turns > GAME.maxTurns) {
+            GAME.maxTurns = GAME.turns;
+            this.domAdapter.updateMaxTurnsCount(GAME.maxTurns);
         }
 
         GAME.game++;
@@ -99,7 +99,7 @@ var GAME = {
     },
 
     redraw: function() {
-        this.domAdapter.updateTurnCounter(GAME.turns);
+        this.domAdapter.updateTurnCount(GAME.turns);
 
         var total = GAME.creatures.length;
         var alive = GAME.getAliveCount();

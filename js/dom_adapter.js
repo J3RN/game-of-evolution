@@ -13,7 +13,7 @@ var DomAdapter = function() {
 }
 
 DomAdapter.prototype = {
-    updateTurnCounter: function(turns) {
+    updateTurnCount: function(turns) {
         this.turnCounter.textContent = "Turn: " + GAME.turns;
     },
     updateCreatureCount: function(count) {
@@ -45,5 +45,8 @@ DomAdapter.prototype = {
     },
     updateGameCount: function(count) {
         this.gameCounter.textContent = "Game #" + count;
+    },
+    updateMaxTurnsCount: function(turns) {
+        this.maxTurnsCounter.textContent = "Max Turns: " + turns;
     },
 };

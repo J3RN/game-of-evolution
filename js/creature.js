@@ -1,8 +1,8 @@
 'use strict';
 
 var CREATURE = {
-    max_lifespan: 100,
-    max_time_without_food: 25,
+    maxLifespan: 100,
+    maxTimeWithoutFood: 25,
 
     randomDirection: function() {
         return Math.floor(Math.random() * 4);
@@ -86,17 +86,17 @@ Creature.prototype = {
         friend: 1,
         empty: 2,
         wall: 3,
-        dead_friend: 4,
-        dead_enemy: 5,
+        deadFriend: 4,
+        deadEnemy: 5,
     },
 
     actions: [
         "eat",
         "mate",
-        "turn_left",
-        "turn_right",
+        "turnLeft",
+        "turnRight",
         "move",
-        "turn_around",
+        "turnAround",
     ],
 
     getBefore: function() {
@@ -116,13 +116,13 @@ Creature.prototype = {
             if (target) {
                 if (DNA.sameDNA(target.dna, this.dna)) {
                     if (target.dead) {
-                        return this.entities.dead_friend;
+                        return this.entities.deadFriend;
                     } else {
                         return this.entities.friend;
                     }
                 } else {
                     if (target.dead) {
-                        return this.entities.dead_enemy;
+                        return this.entities.deadEnemy;
                     } else {
                         return this.entities.enemy;
                     }
@@ -159,8 +159,8 @@ Creature.prototype = {
             this[action]();
 
             // No food or too old? Die
-            if ((this.age % CREATURE.max_time_without_food === 0 && this.food === 0) ||
-                    this.age > CREATURE.max_lifespan) {
+            if ((this.age % CREATURE.maxTimeWithoutFood === 0 && this.food === 0) ||
+                    this.age > CREATURE.maxLifespan) {
                 this.die();
             }
         }
@@ -180,8 +180,8 @@ Creature.prototype = {
             var childLocation = CREATURE.spawnLocation(this);
 
             if (childLocation) {
-                var new_dna = DNA.copyDNA(this.dna);
-                var child = new Creature(new_dna, childLocation);
+                var newDna = DNA.copyDNA(this.dna);
+                var child = new Creature(newDna, childLocation);
 
                 // Subtract one for new creature
                 this.food--;
@@ -197,7 +197,7 @@ Creature.prototype = {
         }
     },
 
-    turn_right: function() {
+    turnRight: function() {
         var direction = this.direction + 1;
         if (direction === 4) {
             direction = 0;
@@ -205,7 +205,7 @@ Creature.prototype = {
         this.direction = direction;
     },
 
-    turn_left: function() {
+    turnLeft: function() {
         var direction = this.direction - 1;
         if (direction === -1) {
             direction = 3;
@@ -240,7 +240,7 @@ Creature.prototype = {
         }
     },
 
-    turn_around: function() {
+    turnAround: function() {
         var newDirection = this.direction - 2;
         if (newDirection < 0) {
             newDirection += 4;
