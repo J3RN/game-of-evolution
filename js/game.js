@@ -168,7 +168,7 @@ var GAME = {
             var reset = document.getElementById("reset");
             reset.onclick = GAME.resetGame;
             GAME.setup();
-            setInterval(GAME.gameLoop, 25);
+            setInterval(GAME.gameLoop, 10);
         }
     }
 
