@@ -9,10 +9,11 @@ var DomAdapter = function() {
     this.deadCounter =          document.getElementById('dead');
     this.avgSizeIndicator =     document.getElementById('avg-size');
     this.maxTurnsCounter =      document.getElementById('max-time');
+    this.gameCounter =          document.getElementById('game-count');
 }
 
 DomAdapter.prototype = {
-    updateTurnCounter: function(turns) {
+    updateTurnCount: function(turns) {
         this.turnCounter.textContent = "Turn: " + GAME.turns;
     },
     updateCreatureCount: function(count) {
@@ -42,5 +43,10 @@ DomAdapter.prototype = {
             document.getElementById("top" + x + "count").textContent = GAME.species[color];
         }
     },
-
+    updateGameCount: function(count) {
+        this.gameCounter.textContent = "Game #" + count;
+    },
+    updateMaxTurnsCount: function(turns) {
+        this.maxTurnsCounter.textContent = "Max Turns: " + turns;
+    },
 };
