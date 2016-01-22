@@ -61,7 +61,7 @@ DomAdapter.prototype = {
         var boardSide = GAME.board.width; // Assumes square
 
         var xPercent = mouseEvent.offsetX / this.canvas.offsetWidth;
-        var yPercent = mouseEvent.offsetY / this.canvas.offsetWidth;
+        var yPercent = mouseEvent.offsetY / this.canvas.offsetHeight;
 
         var boardX = Math.floor(xPercent * boardSide);
         var boardY = Math.floor(yPercent * boardSide);
@@ -80,8 +80,8 @@ DomAdapter.prototype = {
             // Position and show
             this.inspectElement.style.display = 'block';
             this.inspectElement.style.position = 'fixed';
-            this.inspectElement.style.top = mouseEvent.offsetY + 'px';
-            this.inspectElement.style.left = mouseEvent.offsetX + 'px';
+            this.inspectElement.style.top = this.canvas.offsetTop + mouseEvent.offsetY + 'px';
+            this.inspectElement.style.left = this.canvas.offsetLeft + mouseEvent.offsetX + 'px';
         } else {
             this.inspectElement.style.display = 'none';
         }
