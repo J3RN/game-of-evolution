@@ -1,60 +1,61 @@
 'use strict';
 
-var Board = function() {
-    this.changed = [];
-    this.board = [];
+class Board {
+    constructor(view, width, height) {
+        this.changed = [];
+        this.board = [];
 
-    this.width =  100;
-    this.height = 100;
+        this.width =  100;
+        this.height = 100;
 
-    this.canvasAdapter = new CanvasAdapter(this);
+        this.view = view;
 
-    for (var x = 0; x < this.width; x++) {
-        this.board[x] = [];
+        for (var x = 0; x < this.width; x++) {
+            this.board[x] = [];
 
-        for (var y = 0; y < this.height; y++) {
-            this.board[x][y] = undefined;
+            for (var y = 0; y < this.height; y++) {
+                this.board[x][y] = undefined;
+            }
+
         }
     }
-}
 
-Board.prototype = {
-    isOutOfBounds: function(loc) {
+    isOutOfBounds(loc) {
         if (loc.x >= 0 && loc.x < this.width &&
                 loc.y >= 0 && loc.y < this.height) {
             return false;
         } else {
             return true;
         }
-    },
+    }
 
-    getItem: function(loc) {
+    getItem(loc) {
         if (this.isOutOfBounds(loc)) {
             return undefined;
         } else {
             return this.board[loc.x][loc.y];
         }
-    },
+    }
 
-    addCreature: function(creature) {
+    addCreature(creature) {
         this.board[creature.loc.x][creature.loc.y] = creature;
         this.changed.push(creature.loc);
-    },
+    }
 
-    removeCreature: function(loc) {
+    removeCreature(loc) {
         delete this.board[loc.x][loc.y];
         this.changed.push(loc);
-    },
+    }
 
-    moveCreature: function(creature, oldLoc, newLoc) {
+    moveCreature(creature, oldLoc, newLoc) {
         this.board[newLoc.x][newLoc.y] = this.getItem(oldLoc);
         this.board[oldLoc.x][oldLoc.y] = undefined;
 
         this.changed.push(oldLoc);
         this.changed.push(newLoc);
-    },
+    }
 
-    randomEmptyLocation: function() {
+    randomEmptyLocation() {
         var randomLocation;
 
         do {
@@ -65,9 +66,9 @@ Board.prototype = {
         } while (this.getItem(randomLocation));
 
         return randomLocation;
-    },
+    }
 
-    clear: function() {
+    clear() {
         for (var x = 0; x < this.width; x++) {
             for (var y = 0; y < this.height; y++) {
                 var loc = {x: x, y: y};
@@ -78,9 +79,9 @@ Board.prototype = {
                 }
             }
         }
-    },
+    }
 
-    redraw: function() {
+    redraw() {
         while (this.changed.length > 0) {
             var loc = this.changed.pop();
             var creature = this.getItem(loc);
@@ -90,13 +91,13 @@ Board.prototype = {
 
             if (creature) {
                 if (creature.dead) {
-                    this.canvasAdapter.setCell(x, y, [creature.color, "75%", "30%"]);
+                    this.view.setCell(x, y, [creature.color, "75%", "30%"]);
                 } else {
-                    this.canvasAdapter.setCell(x, y, [creature.color, "100%", "50%"]);
+                    this.view.setCell(x, y, [creature.color, "100%", "50%"]);
                 }
             } else {
-                this.canvasAdapter.setCell(x, y, [0, "100%", "100%"]);
+                this.view.setCell(x, y, [0, "100%", "100%"]);
             }
         }
-    },
+    }
 }

@@ -1,24 +1,27 @@
 'use strict';
 
-var GAME = {
-    numIndiv: 5000,
-    maxTurns: 0,
-    turns: 0,
-    game: 1,
-    creatures: [],
-    species: [],
-    domAdapter: undefined,  // loaded in setup
-    canvasAdapter: undefined,
+class Game {
+    constructor() {
+        this.width = 100;
+        this.height = 100;
 
-    setup: function() {
-        this.domAdapter =       new DomAdapter();
-        this.board =            new Board();
+        this.numIndiv = 5000;
+        this.maxTurns = 0;
+        this.turns = 0;
+        this.game = 1;
+        this.creatures = [];
+        this.species = [];
 
-        GAME.createInitialCreatures();
-    },
+        this.view =     new View(this.width, this.height);
+        this.board =    new Board(this.view, this.width, this.height);
 
-    createInitialCreatures: function() {
-        var numIndiv = GAME.numIndiv;
+        this.interval = setInterval(this.gameLoop, 100);
+
+        this.createInitialCreatures();
+    }
+
+    createInitialCreatures() {
+        var numIndiv = this.numIndiv;
 
         for (var j = 0; j < numIndiv; j++) {
             var dna = DNA.generateDNA();
@@ -28,12 +31,12 @@ var GAME = {
             this.addCreature(newCreature);
         }
 
-        GAME.redraw();
-    },
+        redraw();
+    }
 
-    gameLoop: function() {
-        for (var i = 0; i < GAME.creatures.length; i++) {
-            var creature = GAME.creatures[i];
+    gameLoop() {
+        for (var i = 0; i < this.creatures.length; i++) {
+            var creature = this.creatures[i];
 
             if (creature) {
                 creature.act();
@@ -41,94 +44,94 @@ var GAME = {
         }
 
         // Clear out 'undefined's
-        GAME.creatures = GAME.creatures.filter(function(x) {
+        this.creatures = this.creatures.filter(function(x) {
             return x !== undefined;
         })
 
-        GAME.turns++;
-        GAME.redraw();
+        this.turns++;
+        this.redraw();
 
-        if (GAME.gameIsOver()) {
-            GAME.resetGame();
+        if (this.gameIsOver()) {
+            this.resetGame();
         }
-    },
+    }
 
-    resetGame: function() {
+    resetGame() {
         var i;
 
-        GAME.board.clear();
-        GAME.creatures = [];
+        this.board.clear();
+        this.creatures = [];
 
         // Update max turns if necessary
-        if (GAME.turns > GAME.maxTurns) {
-            GAME.maxTurns = GAME.turns;
-            this.domAdapter.updateMaxTurnsCount(GAME.maxTurns);
+        if (this.turns > this.maxTurns) {
+            this.maxTurns = this.turns;
+            this.view.updateMaxTurnsCount(this.maxTurns);
         }
 
-        GAME.game++;
-        this.domAdapter.updateGameCount(GAME.game);
+        this.game++;
+        this.view.updateGameCount(this.game);
 
         // Create new creatures, restart game timer
-        GAME.createInitialCreatures();
-        GAME.turns = 0;
-    },
+        this.createInitialCreatures();
+        this.turns = 0;
+    }
 
-    getAliveCount: function() {
-        return GAME.creatures.filter(function(x) {
+    getAliveCount() {
+        return this.creatures.filter(function(x) {
             return !x.dead;
         }).length;
-    },
+    }
 
-    getAvgSize: function() {
-        var totalSize = GAME.creatures.reduce(function(acc, item) {
+    getAvgSize() {
+        var totalSize = this.creatures.reduce(function(acc, item) {
             return acc + item.size;
         }, 0);
-        return totalSize / GAME.creatures.length;
-    },
+        return totalSize / this.creatures.length;
+    }
 
-    topXSpecies: function(x) {
-        return GAME.nonDeadSpecies().sort(function(a, b) {
-            return GAME.species[b] - GAME.species[a];
+    topXSpecies(x) {
+        return this.nonDeadSpecies().sort(function(a, b) {
+            return this.species[b] - this.species[a];
         }).slice(0, x);
-    },
+    }
 
-    nonDeadSpecies: function() {
-        return Object.keys(GAME.species).filter(function(name) {
-            return GAME.species[name] && GAME.species[name] !== 0;
+    nonDeadSpecies() {
+        return Object.keys(this.species).filter(function(name) {
+            return this.species[name] && this.species[name] !== 0;
         });
-    },
+    }
 
-    redraw: function() {
-        this.domAdapter.updateTurnCount(GAME.turns);
+    redraw() {
+        this.view.updateTurnCount(this.turns);
 
-        var total = GAME.creatures.length;
-        var alive = GAME.getAliveCount();
+        var total = this.creatures.length;
+        var alive = this.getAliveCount();
         var dead = total - alive;
 
-        this.domAdapter.updateCreatureCount(total);
-        this.domAdapter.updateAliveCount(alive);
-        this.domAdapter.updateDeadCount(dead);
+        this.view.updateCreatureCount(total);
+        this.view.updateAliveCount(alive);
+        this.view.updateDeadCount(dead);
 
-        this.domAdapter.updateAvgSizeIndicator(this.getAvgSize());
-        this.domAdapter.updateTopSpeciesList(GAME.topXSpecies(5));
+        this.view.updateAvgSizeIndicator(this.getAvgSize());
+        this.view.updateTopSpeciesList(topXSpecies(5));
 
         this.board.redraw();
-    },
+    }
 
-    gameIsOver: function() {
-        if (GAME.getAliveCount() === 0) {
+    gameIsOver() {
+        if (getAliveCount() === 0) {
             return true;
         }
 
         return false;
-    },
+    }
 
-    addCreature: function(newCreature) {
+    addCreature(newCreature) {
         this.creatures.push(newCreature);
         this.board.addCreature(newCreature);
-    },
+    }
 
-    removeCreature: function(creature) {
+    removeCreature(creature) {
         if (!creature.dead) {
             this.species[creature.color]--;
         }
@@ -137,19 +140,3 @@ var GAME = {
         this.board.removeCreature(creature.loc);
     }
 };
-
-
-(function() {
-    function load() {
-        if (document.readyState === 'loading') {
-            setTimeout(load, 100);
-        } else {
-            var reset = document.getElementById("reset");
-            reset.onclick = GAME.resetGame;
-            GAME.setup();
-            setInterval(GAME.gameLoop, 100);
-        }
-    }
-
-    load();
-})();
