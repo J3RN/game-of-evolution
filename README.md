@@ -56,3 +56,7 @@ There is also `js/canvas_adapter.js`, but it should not need to be modified othe
 ### `inspect.js`
 
 - Handles the mouse-over action of showing the creature's DNA
+
+## LICENSE
+
+This is MIT Licensed. You can find the whole license in the `LICENSE` file.
