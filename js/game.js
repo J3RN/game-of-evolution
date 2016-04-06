@@ -11,8 +11,8 @@ var GAME = {
     canvasAdapter: undefined,
 
     setup: function() {
-        this.domAdapter =       new DomAdapter();
         this.board =            new Board();
+        this.domAdapter =       new DomAdapter();
 
         GAME.createInitialCreatures();
     },

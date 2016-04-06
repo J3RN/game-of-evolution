@@ -13,12 +13,18 @@ td {
 	width: 50%;
 }
 
-
-canvas {
+canvas#canvas {
   border: 1px solid black;
   margin-top: 1vmin;
   height: 98vmin;
   width: 98vmin;
+}
+
+#inspect {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid black;
+  padding: 5px;
+  z-index: 100;
 }
 
 #control {
@@ -44,17 +50,17 @@ button {
   box-shadow: none;
 }
 
-table {
+table, td {
+  text-align: left;
+}
+
+table.stat-table {
   margin-top: 3em;
   box-sizing: border-box;
   width: 15em;
 }
 
-table, td {
-  text-align: left;
-}
-
-td {
+table.stat-table td {
   height: 1.5em;
   line-height: 1.5em;
   vertical-align: middle;
@@ -62,16 +68,16 @@ td {
   width: 50%;
 }
 
-thead td {
+table.stat-table thead td {
     text-align: center;
     width: 100%;
 }
 
-thead tr {
+table.stat-table thead tr {
   border-bottom: 2px solid #DBDBDB;
 }
 
-tr {
+table.stat-table tr {
   display: flex;
 }
 

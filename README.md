@@ -5,6 +5,13 @@ Check out a live running version [on my website](http:/j3rn.com/goe).
 ## Running
 - Simply open `index.html` in your browser.
 
+## Controls
+
+There aren't a lot of "controls," per se, but there are a few interactive features.
+
+- Click to enable the "inspect" element. It will jump to your mouse and show you the DNA of the creature that you are currently hovering over. When you move your mouse, the "inspect" element will follow.
+- Click "Reset" to reset the game to it's beginning state.
+
 ## Rules
 
 ### Individuals
