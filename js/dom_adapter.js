@@ -74,8 +74,11 @@ DomAdapter.prototype = {
         if (this.inspecting) {
             var boardSide = GAME.board.width; // Assumes square
 
-            var xPercent = mouseEvent.offsetX / this.canvas.offsetWidth;
-            var yPercent = mouseEvent.offsetY / this.canvas.offsetHeight;
+            var xCoordinate = (mouseEvent.clientX - this.canvas.offsetLeft);
+            var yCoordinate = (mouseEvent.clientY - this.canvas.offsetTop);
+
+            var xPercent = xCoordinate / this.canvas.offsetWidth;
+            var yPercent = yCoordinate / this.canvas.offsetHeight;
 
             var boardX = Math.floor(xPercent * boardSide);
             var boardY = Math.floor(yPercent * boardSide);
@@ -91,13 +94,13 @@ DomAdapter.prototype = {
                 });
                 this.inspectElement.innerHTML = table + "</tbody></table>";
 
-                // Position and show
-                this.inspectElement.style.display = 'block';
-                this.inspectElement.style.position = 'fixed';
-                this.inspectElement.style.top = this.canvas.offsetTop + mouseEvent.offsetY + 'px';
-                this.inspectElement.style.left = this.canvas.offsetLeft + mouseEvent.offsetX + 'px';
             }
 
+            // Position and show
+            this.inspectElement.style.display = 'block';
+            this.inspectElement.style.position = 'fixed';
+            this.inspectElement.style.top = mouseEvent.clientY + 'px';
+            this.inspectElement.style.left = mouseEvent.clientX + 'px';
         }
     }
 };

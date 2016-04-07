@@ -25,6 +25,7 @@ canvas#canvas {
   border: 1px solid black;
   padding: 5px;
   z-index: 100;
+  display: none;
 }
 
 #control {
