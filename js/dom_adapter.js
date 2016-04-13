@@ -50,11 +50,13 @@ DomAdapter.prototype = {
 
             if (color) {
                 document.getElementById("top" + x + "color").style.color = "hsl(" + color + ", 100%, 50%)";
+                document.getElementById("top" + x + "count").textContent = GAME.species[color];
             } else {
                 document.getElementById("top" + x + "color").style.color = "none";
+                document.getElementById("top" + x + "color").textContent = "";
+                document.getElementById("top" + x + "count").textContent = "";
             }
 
-            document.getElementById("top" + x + "count").textContent = GAME.species[color];
         }
     },
     updateGameCount: function(count) {
