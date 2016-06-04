@@ -46,10 +46,9 @@ DomAdapter.prototype = {
         for (var x = 1; x < 6; x++) {
             var color = topSpecies[x - 1];
 
-            document.getElementById("top" + x + "color").textContent = color;
-
             if (color) {
                 document.getElementById("top" + x + "color").style.color = "hsl(" + color + ", 100%, 50%)";
+                document.getElementById("top" + x + "color").textContent = color;
                 document.getElementById("top" + x + "count").textContent = GAME.species[color];
             } else {
                 document.getElementById("top" + x + "color").style.color = "none";
