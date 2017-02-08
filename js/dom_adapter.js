@@ -47,12 +47,12 @@ DomAdapter.prototype = {
             var color = topSpecies[x - 1];
 
             if (color) {
-                document.getElementById("top" + x + "color").style.color = "hsl(" + color + ", 100%, 50%)";
-                document.getElementById("top" + x + "color").textContent = color;
+                document.getElementById("top" + x + "color").style.background = "hsl(" + color + ", 100%, 50%)";
+                document.getElementById("top" + x + "name").textContent = color;
                 document.getElementById("top" + x + "count").textContent = GAME.species[color];
             } else {
-                document.getElementById("top" + x + "color").style.color = "none";
-                document.getElementById("top" + x + "color").textContent = "";
+                document.getElementById("top" + x + "color").style.background = "none";
+                document.getElementById("top" + x + "name").textContent = "";
                 document.getElementById("top" + x + "count").textContent = "";
             }
 
