@@ -9,10 +9,6 @@ html, body {
   font-weight: 300;
 }
 
-td {
-	width: 50%;
-}
-
 canvas#canvas {
   border: 1px solid black;
   margin-top: 1vmin;
@@ -49,6 +45,12 @@ button {
   border-radius: 2px;
   border: none;
   box-shadow: none;
+}
+
+td > span.swatch {
+    padding-left: 1em;
+    margin-right: 0.5em;
+    height: 1em;
 }
 
 table, td {
