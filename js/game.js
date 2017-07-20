@@ -1,8 +1,8 @@
 'use strict';
 
 var GAME = {
-    numIndiv: 5000,
-    maxTurns: 0,
+    numFood: 5000,
+    max_turns: 0,
     turns: 0,
     game: 1,
     creatures: [],
@@ -14,21 +14,35 @@ var GAME = {
         this.board =            new Board();
         this.domAdapter =       new DomAdapter();
 
-        GAME.createInitialCreatures();
+        GAME.createInitialCreature();
     },
 
-    createInitialCreatures: function() {
-        var numIndiv = GAME.numIndiv;
+    createInitialCreature: function() {
+        var fakeDNA = new Array(DNA.length);
 
-        for (var j = 0; j < numIndiv; j++) {
-            var dna = DNA.generateDNA();
-            var randomLoc = this.board.randomEmptyLocation();
-            var newCreature = new Creature(dna, randomLoc);
-
-            this.addCreature(newCreature);
+        // numBehavior is out-of-bounds for normal DNA. This DNA is guaranteed
+        // not to match any naturally birthed creature.
+        for (var i = 0; i < DNA.length; i++) {
+            fakeDNA[i] = DNA.numBehavior;
         }
 
-        GAME.redraw();
+        // Generate fake, dead creatures
+        for (var j = 0; j < this.numFood; j++) {
+            var randomLoc = this.board.randomEmptyLocation();
+            var newCreature = new Creature(fakeDNA, randomLoc);
+            newCreature.dead = true;
+
+            this.board.addCreature(newCreature);
+        }
+
+        // Generate real creature
+        var dna = DNA.generateDNA();
+        var randomLoc = this.board.randomEmptyLocation();
+        var newCreature = new Creature(dna, randomLoc);
+
+        this.addCreature(newCreature);
+
+	GAME.redraw();
     },
 
     gameLoop: function() {
@@ -69,7 +83,7 @@ var GAME = {
         this.domAdapter.updateGameCount(GAME.game);
 
         // Create new creatures, restart game timer
-        GAME.createInitialCreatures();
+        GAME.createInitialCreature();
         GAME.turns = 0;
     },
 
@@ -126,6 +140,13 @@ var GAME = {
     addCreature: function(newCreature) {
         this.creatures.push(newCreature);
         this.board.addCreature(newCreature);
+
+        // Update GAME.species count
+        if (GAME.species[newCreature.color] === undefined) {
+            GAME.species[newCreature.color] = 1;
+        } else {
+            GAME.species[newCreature.color] += 1;
+        }
     },
 
     removeCreature: function(creature) {
@@ -147,7 +168,7 @@ var GAME = {
             var reset = document.getElementById("reset");
             reset.onclick = GAME.resetGame;
             GAME.setup();
-            setInterval(GAME.gameLoop, 100);
+            setInterval(GAME.gameLoop, 10);
         }
     }
 
