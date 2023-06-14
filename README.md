@@ -16,7 +16,7 @@ There aren't a lot of "controls," per se, but there are a few interactive featur
 
 ### Individuals
 
-- Individuals mate asexually.
+- Individuals reproduce asexually.
 - When reproducing, the offspring can appear on any of the four spaces around the parent, top, right, bottom, or left.
 - Offspring have a copy of their parent's DNA, with a %1 chance of a random mutation.
 - Individuals who do not eat after 25 turns (2.5 seconds) die of starvation.
